@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Repaso Interactivo - Examen de Redes 1º SMR</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Repaso Examen - Unidad 2: Funcionamiento del Ordenador</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -24,936 +24,1130 @@
             }
         }
     </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
-        .pulse-soft {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .7; }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 3px;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans selection:bg-blue-500 selection:text-white">
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 flex flex-col">
 
     <!-- Header Navigation -->
-    <header class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-slate-200 dark:border-slate-700">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🌐</span>
-                <div>
-                    <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                        Repaso de Redes - 1º SMR
-                    </h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Preparación para el Examen</p>
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i class="fa-solid fa-laptop-code text-xl"></i>
                 </div>
+                <h1 class="font-bold text-lg sm:text-xl text-gray-900 dark:text-white">Unidad 2: Funcionamiento del Ordenador</h1>
             </div>
-            
-            <div class="flex items-center gap-3">
-                <!-- Score Badge -->
-                <div id="scoreBadge" class="flex items-center gap-2 bg-blue-100 dark:bg-slate-700/80 px-3 py-1.5 rounded-xl text-sm font-semibold text-blue-800 dark:text-cyan-300 border border-blue-200 dark:border-slate-600">
-                    <span>🏆 Puntos:</span>
-                    <span id="scoreVal" class="text-base font-extrabold text-blue-600 dark:text-cyan-400">0</span>
-                </div>
-                
+
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <!-- Tabs navigation -->
+                <nav class="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-xl">
+                    <button id="btn-tab-apuntes" onclick="switchTab('apuntes')" class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm">
+                        <i class="fa-solid fa-book-open mr-1.5"></i>Apuntes
+                    </button>
+                    <button id="btn-tab-juego" onclick="switchTab('juego')" class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        <i class="fa-solid fa-gamepad mr-1.5"></i>Juego Test (50+)
+                    </button>
+                </nav>
+
                 <!-- Dark Mode Toggle Button -->
-                <button id="themeToggleBtn" onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center gap-2 text-sm font-medium shadow-sm border border-slate-200 dark:border-slate-600" title="Cambiar tema">
-                    <span id="themeIcon">🌙</span>
-                    <span class="hidden md:inline" id="themeText">Modo Oscuro</span>
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="Cambiar Tema">
+                    <i id="theme-icon-sun" class="fa-solid fa-sun text-amber-500 hidden"></i>
+                    <i id="theme-icon-moon" class="fa-solid fa-moon text-indigo-500"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto px-4 py-6 flex-grow w-full">
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- Topic Selector Section -->
-        <section class="mb-6">
-            <div class="flex justify-between items-center mb-3">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    Selecciona un Apartado para Repasar:
-                </h2>
-                <span id="topicCountTag" class="text-xs bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-md font-semibold">17 preguntas</span>
+        <!-- ================= APUNTES SECTION ================= -->
+        <section id="sec-apuntes" class="space-y-8">
+            <!-- Introducción -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg">
+                <div class="max-w-3xl">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Guía de Repaso Rápido</h2>
+                    <p class="text-blue-100 text-sm sm:text-base mb-4">Todo el temario de la Unidad 2 resumido y estructurado en bloques clave para estudiar antes del examen.</p>
+                    <div class="flex flex-wrap gap-2 text-xs font-semibold">
+                        <span class="bg-white/20 px-3 py-1 rounded-full">1. Historia</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full">2. Arquitectura Von Neumann</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full">3. Periféricos y Arranque</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full">4. Software</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full">5. Sistemas Operativos</span>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" id="topicButtons">
-                <!-- Dynamically generated buttons -->
-            </div>
+
+            <!-- BLOQUE 1: Historia -->
+            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
+                    <div class="p-2 bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400 rounded-lg">
+                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">1. Historia y Evolución de los Ordenadores</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
+                        <h4 class="font-semibold text-amber-600 dark:text-amber-400 text-sm mb-1">Prehistoria</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">
+                            <strong>Ábaco Chino (3500-2000 a.C.):</strong> Servía para representar números en el sistema decimal y realizar operaciones fundamentales mediante cuentas móviles.<br>
+                            <strong>Quipu Andino (1430-1560):</strong> Sistema nemotécnico mediante cuerdas de lana/algodón y nudos usado por los incas como contabilidad y forma de registro.
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
+                        <h4 class="font-semibold text-amber-600 dark:text-amber-400 text-sm mb-1">Era Mecánica (Gen 0)</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">
+                            <strong>Pascalina (1642):</strong> Ruedas dentadas para sumar y restar.<br>
+                            <strong>Máquina de Leibniz (1671):</strong> Suma, resta, multiplica y divide.<br>
+                            <strong>Máquinas de Babbage (1822/1837):</strong> Diferencial (ecuaciones) y Analítica (conceptos de entrada, salida, memoria, UC y UAL).<br>
+                            <strong>Herman Hollerith (1890):</strong> Máquina tabuladora con tarjetas perforadas para el censo de EE.UU. Funda CTR (posteriormente IBM en 1924).<br>
+                            <strong>MARK I (1944):</strong> Calculadora electromecánica de Howard H. Aiken (17m de largo, 70 toneladas).
+                        </p>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
+                        <h4 class="font-semibold text-amber-600 dark:text-amber-400 text-sm mb-1">Era Electrónica</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">
+                            Reemplazo de los componentes mecánicos por componentes electrónicos activos: válvulas de vacío, transistores y microchips de silicio integrados.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tabla Generaciones -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-gray-600 dark:text-gray-300 border-collapse">
+                        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                            <tr>
+                                <th class="p-2 border border-gray-200 dark:border-gray-600">Gen.</th>
+                                <th class="p-2 border border-gray-200 dark:border-gray-600">Periodo</th>
+                                <th class="p-2 border border-gray-200 dark:border-gray-600">Tecnología Clave</th>
+                                <th class="p-2 border border-gray-200 dark:border-gray-600">Características y Modelos Clave</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">1ª</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">1946-1955</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Válvulas de vacío</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">ENIAC (Eckert y Mauchly), EDVAC (programa almacenado), UNIVAC-I (primer ordenador comercial con cintas magnéticas), MANIAC I. Lenguaje máquina puro.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">2ª</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">1955-1964</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Transistores</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Sustitución de válvulas por transistores (menor tamaño y mayor fiabilidad/rapidez). IBM 1401, CDC 6600. Nacen lenguajes de alto nivel (COBOL, FORTRAN, ALGOL). Primeros discos duros con núcleos de ferrita.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">3ª</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">1964-1974</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Circuitos Integrados (SSI/MSI)</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Encapsulación de múltiples componentes en una sola pieza. IBM 370, PDP-8, PDP-11. Desarrollo significativo del software y sistemas operativos de tiempo compartido. Lenguajes BASIC y Pascal.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">4ª</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">1974-1983</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Microprocesador (LSI/VLSI)</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Intel 4004 integra toda la CPU en un solo circuito. Nacen los ordenadores personales (PC). Perfeccionamiento de memorias secundarias y aparición de memoria virtual. Fujitsu M382, Cray X-MP.</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">5ª</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">1983-Act.</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">VLSI / Inteligencia Artificial</td>
+                                <td class="p-2 border border-gray-200 dark:border-gray-600">Proyecto de 5ª Generación (Japón). Arquitecturas paralelas de gran velocidad, comunicación mediante lenguaje natural cotidiano, supercomputadores (Altamira, Picasso, Pentium, Alpha).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <!-- BLOQUE 2: Arquitectura Von Neumann -->
+            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
+                    <div class="p-2 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 rounded-lg">
+                        <i class="fa-solid fa-microchip text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">2. Arquitectura Von Neumann y Componentes de la CPU</h3>
+                </div>
+
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    John von Neumann formuló el modelo donde las unidades del ordenador están conectadas permanentemente bajo un control central, introduciendo la idea fundamental del <strong>programa almacenado</strong>: las instrucciones del programa y los datos conviven en la misma memoria principal.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- CPU -->
+                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
+                        <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm"><i class="fa-solid fa-brain mr-1.5"></i>UCP / CPU (Unidad Central de Proceso)</h4>
+                        <p class="text-xs text-gray-600 dark:text-gray-300">Es el cerebro de la máquina que gobierna el sistema. Se divide internamente en:</p>
+                        <ul class="text-xs space-y-2 text-gray-600 dark:text-gray-300">
+                            <li><strong>Unidad de Control (UC):</strong> Gobierna todo el sistema. Interpreta instrucciones de la RAM y envía señales de control.
+                                <br><em>- CP (Contador de Programa):</em> Contiene la dirección de la siguiente instrucción.
+                                <br><em>- RI (Registro de Instrucción):</em> Retiene la instrucción actual.
+                                <br><em>- DI (Descodificador):</em> Analiza el código de operación del RI.
+                                <br><em>- Reloj:</em> Genera impulsos síncronos en gigahercios (GHz) coordinando los tiempos de ciclo.
+                                <br><em>- Secuenciador:</em> Emite microórdenes síncronas.
+                            </li>
+                            <li><strong>Unidad Aritmético-Lógica (UAL / ALU):</strong> Aplica operaciones aritméticas y lógica booleana (verdadero/falso).
+                                <br><em>- FPU (Unidad de Coma Flotante):</em> Coprocesador especializado en números fraccionarios, potencias, trigonometría y logaritmos.
+                                <br><em>- Registro Acumulador:</em> Deposita los resultados inmediatos de la UAL.
+                            </li>
+                            <li><strong>Registros Internos:</strong> Celdas de memoria de alta velocidad dentro del microchip (múltiplos de 8 bits: 16, 32, 64 bits).</li>
+                        </ul>
+                    </div>
+
+                    <!-- Buses y Jerarquía -->
+                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-3">
+                        <div>
+                            <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm mb-1"><i class="fa-solid fa-bus mr-1.5"></i>Buses de Comunicación</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-300 mb-1">Líneas físicas u ópticas en paralelo para transmitir bits:</p>
+                            <ul class="text-xs space-y-1 text-gray-600 dark:text-gray-300">
+                                <li><strong>Bus de Datos:</strong> Intercambio bidireccional de datos e instrucciones entre la CPU y demás componentes (64 bits permiten 8 bytes por ciclo).</li>
+                                <li><strong>Bus de Direcciones:</strong> La CPU especifica qué celda de memoria o dispositivo E/S quiere acceder. $n$ bits permiten direccionamiento directo de $2^n$ casillas.</li>
+                                <li><strong>Bus de Control:</strong> Transporta impulsos de mando y lectura/escritura generados por la UC.</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-t border-gray-200 dark:border-gray-600 pt-2">
+                            <h4 class="font-bold text-purple-600 dark:text-purple-400 text-sm mb-1"><i class="fa-solid fa-layer-group mr-1.5"></i>Jerarquía de Memorias</h4>
+                            <p class="text-xs text-gray-600 dark:text-gray-300">
+                                <em>Organización por capacidad, velocidad y coste por bit:</em><br>
+                                <strong>Nivel 0: Registros CPU</strong> (8-128 bits, acceso &lt; 1 ns)<br>
+                                <strong>Nivel 1: Memoria Caché</strong> (10 KB - 512 MB, acceso &lt; 5 ns, tampón ultra rápido)<br>
+                                <strong>Nivel 2: Memoria RAM Principal</strong> (10 MB - 10 GB+, acceso &le; 15 ns, volátil)<br>
+                                <strong>Nivel 3: Secundaria / Disco Duro</strong> (GBs a TBs, acceso &lt; 10 ms)<br>
+                                <strong>Nivel 4: Auxiliar / Extraíble</strong> (Acceso de 100 ms a minutos)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalle ciclo de instrucción -->
+                <div class="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-xl border border-blue-100 dark:border-blue-900/50 text-xs space-y-1">
+                    <h4 class="font-bold text-blue-800 dark:text-blue-300">Ciclo Completo de Ejecución de una Instrucción paso a paso:</h4>
+                    <ol class="list-decimal list-inside text-blue-900 dark:text-blue-200 leading-relaxed space-y-0.5">
+                        <li>El <strong>CP</strong> tiene la dirección de la siguiente instrucción. Se copia en el <strong>RDM</strong> (Registro Dirección Memoria).</li>
+                        <li>El contenido de esa dirección en la RAM pasa al <strong>RIM</strong> (Registro Intercambio Memoria) y de ahí al <strong>RI</strong> (Registro Instrucción).</li>
+                        <li>El <strong>Descodificador (DI)</strong> analiza el código de operación.</li>
+                        <li>La UC solicita la lectura de los operandos necesarios desde la RAM al RIM.</li>
+                        <li>La <strong>UAL</strong> ejecuta la operación e ingresa el resultado en el <strong>Registro Acumulador</strong>.</li>
+                        <li>El <strong>CP</strong> se incrementa en +1 para apuntar a la instrucción posterior.</li>
+                    </ol>
+                </div>
+            </article>
+
+            <!-- BLOQUE 3: Periféricos y Arranque -->
+            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
+                    <div class="p-2 bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400 rounded-lg">
+                        <i class="fa-solid fa-plug text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">3. Periféricos y Proceso de Arranque del Ordenador</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="space-y-2">
+                        <h4 class="font-bold text-gray-800 dark:text-gray-200">Tipos de Periféricos (Entrada / Salida / Mixtos):</h4>
+                        <ul class="space-y-1.5 text-gray-600 dark:text-gray-300">
+                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Entrada:</span> Introducen datos externos a la CPU para su tratamiento. <em>Ejemplos:</em> Teclado, ratón, cámara web, escáner, micrófono, lector de código de barras, joystick, pantalla táctil.</li>
+                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Salida:</span> Reciben datos procesados por la CPU y los reproducen comprensibles para el usuario. <em>Ejemplos:</em> Monitor, impresora, altavoces, auriculares, fax.</li>
+                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Almacenamiento:</span> Guardan datos permanentemente. <em>Magnéticos:</em> Discos duros (HDD). <em>Ópticos:</em> CD (700 MB), DVD (4.7-8.5 GB), Blu-Ray (25-50 GB). <em>Sólidos:</em> Memorias Flash, pendrives.</li>
+                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Comunicación:</span> Facilitan la interacción entre dos o más ordenadores. <em>Ejemplos:</em> Tarjeta de red, módem, tarjetas Wi-Fi / Bluetooth, switches/HUB, puertos serie/paralelo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-3.5 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
+                        <h4 class="font-bold text-gray-800 dark:text-gray-200">Secuencia Detallada de Arranque (Booting):</h4>
+                        <ol class="list-decimal list-inside space-y-1 text-gray-600 dark:text-gray-300">
+                            <li><strong>Encendido eléctrico:</strong> La fuente de alimentación distribuye energía a la CPU y placa base.</li>
+                            <li><strong>Acceso a la ROM:</strong> La CPU ejecuta el código del chip de memoria <strong>ROM BIOS</strong> (Basic Input/Output System).</li>
+                            <li><strong>Ejecución del POST:</strong> El programa <em>POST (Power On Self Test)</em> realiza una autocomprobación diagnóstica de los componentes de hardware (RAM, teclado, GPU, discos).</li>
+                            <li><strong>Carga del SO:</strong> Si el POST no encuentra fallos, la BIOS busca un disco de sistema con sector de arranque.</li>
+                            <li><strong>Transferencia a la RAM:</strong> Los archivos fundamentales del Sistema Operativo se cargan en la RAM y el SO toma el control total del equipo.</li>
+                        </ol>
+                    </div>
+                </div>
+            </article>
+
+            <!-- BLOQUE 4: El Software del Ordenador (SEPARADO) -->
+            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
+                    <div class="p-2 bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 rounded-lg">
+                        <i class="fa-solid fa-code text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">4. El Software del Ordenador</h3>
+                </div>
+
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    Según el estándar IEEE 729, el <strong>Software</strong> es el conjunto de programas de cómputo, procedimientos, reglas, documentación y datos asociados que forman parte de las operaciones de un sistema de computación. Es el componente lógico intangible del ordenador.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+                    <!-- Clasificación por tipo de trabajo -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm"><i class="fa-solid fa-briefcase mr-1.5"></i>1. Basado en el tipo de trabajo que realiza</h4>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">A. Software de Sistema:</strong>
+                            <p class="text-gray-600 dark:text-gray-300">Permite que el hardware funcione y sirve de interfaz entre el usuario y los recursos físicos. Incluye Sistemas Operativos, controladores de dispositivo (drivers), utilidades de diagnóstico, corrección y optimización.</p>
+                        </div>
+
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">B. Software de Aplicación:</strong>
+                            <p class="text-gray-600 dark:text-gray-300">Programas diseñados para ayudar al usuario a llevar a cabo tareas específicas automatizadas. <em>Ejemplos:</em> Suites ofimáticas (Word, Excel), gestión industrial, software médico, educativo, diseño asistido por ordenador (CAD).</p>
+                        </div>
+
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">C. Software de Programación / Desarrollo:</strong>
+                            <p class="text-gray-600 dark:text-gray-300">Herramientas utilizadas por los desarrolladores para escribir y crear nuevos programas. Destacan los Entornos de Desarrollo Integrados (IDE), editores de código, compiladores, intérpretes y depuradores.</p>
+                        </div>
+                    </div>
+
+                    <!-- Clasificación por método de distribución -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm"><i class="fa-solid fa-box-open mr-1.5"></i>2. Basado en el método de distribución</h4>
+                        
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">Shareware:</strong>
+                            <p class="text-gray-600 dark:text-gray-300">Modalidad de distribución evaluativa. Permite probar el producto de forma gratuita por un tiempo o uso determinado. Transcurrido ese plazo, requiere de un pago para obtener la licencia completa. <em>Ejemplos:</em> WinZip, WinRAR, Paint Shop Pro.</p>
+                        </div>
+
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">Freeware:</strong>
+                            <p class="text-gray-600 dark:text-gray-300">Software distribuido sin coste alguno. Puede incluir restricciones en su licencia (no modificar la app, no venderla, dar crédito al autor). No debe confundirse siempre con el Software Libre.</p>
+                        </div>
+
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">Software Libre (4 Libertades GNU):</strong>
+                            <p class="text-gray-600 dark:text-gray-300">Ofrece total libertad a los usuarios para: 1) Ejecutar el programa para cualquier fin. 2) Estudiar el código fuente y adaptarlo. 3) Distribuir copias. 4) Mejorarlo y publicar las mejoras para la comunidad.</p>
+                        </div>
+
+                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
+                            <strong class="text-gray-900 dark:text-white">Software Multimedia y de Uso Específico:</strong>
+                            <p class="text-gray-600 dark:text-gray-300"><strong>Multimedia:</strong> Integra texto, gráficos, audio y animaciones (enciclopedias interactiva).<br><strong>Uso específico:</strong> Desarrollado a medida para resolver una necesidad particular de un cliente/empresa (gestión de videoclubs, notas de escuelas, bancos).</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- BLOQUE 5: El Sistema Operativo (SEPARADO) -->
+            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
+                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
+                    <div class="p-2 bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-400 rounded-lg">
+                        <i class="fa-solid fa-sliders text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">5. El Sistema Operativo (SO)</h3>
+                </div>
+
+                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                    Es el programa o conjunto de programas primordiales que controlan y gestionan el funcionamiento del hardware, abstrayendo al usuario de la complejidad de la máquina y coordinando jerárquicamente todos los procesos y periféricos.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <!-- Componentes -->
+                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
+                        <h4 class="font-bold text-purple-600 dark:text-purple-400 text-sm"><i class="fa-solid fa-cubes mr-1.5"></i>Componentes Básicos</h4>
+                        <ul class="space-y-1.5 text-gray-600 dark:text-gray-300">
+                            <li><strong>Núcleo (Kernel):</strong> Funciones fundamentales. Programa de arranque, planificador de tareas/procesos de la CPU, administración de memoria, periféricos e interrupciones.</li>
+                            <li><strong>Intérprete de Comandos (Shell):</strong> Interfaz entre usuario y Kernel. Traduce órdenes (gráficas GUI o comandos de consola CLI) en llamadas al sistema.</li>
+                            <li><strong>Sistema de Archivos:</strong> Organiza la información en estructuras arbóreas de carpetas y ficheros.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Funciones -->
+                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
+                        <h4 class="font-bold text-purple-600 dark:text-purple-400 text-sm"><i class="fa-solid fa-list-check mr-1.5"></i>Funciones Principales</h4>
+                        <ul class="space-y-1 text-gray-600 dark:text-gray-300">
+                            <li>• Proporcionar una interfaz accesible (GUI/CLI).</li>
+                            <li>• Reconocer e interactuar con componentes mediante <em>drivers</em>.</li>
+                            <li>• Administrar permisos y accesos de archivos.</li>
+                            <li>• Controlar las interrupciones para dar prioridad a tareas.</li>
+                            <li>• Gestionar la memoria RAM y crear <strong>Memoria Virtual</strong> en el disco duro si la física no es suficiente.</li>
+                            <li>• Contabilizar y repartir de forma equitativa el uso de recursos entre aplicaciones evitando conflictos.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Clasificación del SO -->
+                    <div class="bg-purple-50 dark:bg-purple-950/30 p-4 rounded-xl border border-purple-100 dark:border-purple-900/40 space-y-2">
+                        <h4 class="font-bold text-purple-800 dark:text-purple-300 text-sm"><i class="fa-solid fa-diagram-project mr-1.5"></i>Clasificación de los SO</h4>
+                        <ul class="space-y-1.5 text-gray-700 dark:text-gray-300">
+                            <li><strong>Por Tareas:</strong>
+                                <br><em>- Monotarea:</em> Solo una tarea a la vez (ej. MS-DOS).
+                                <br><em>- Multitarea:</em> Varios procesos concurrentes (ej. Windows, macOS).
+                            </li>
+                            <li><strong>Por Usuarios:</strong>
+                                <br><em>- Monousuario:</em> Atiende a un solo usuario (ej. MS-DOS, Windows 11 doméstico).
+                                <br><em>- Multiusuario:</em> Soporta múltiples usuarios compartiendo recursos en red (ej. Linux, UNIX).
+                            </li>
+                            <li><strong>Por Procesadores:</strong>
+                                <br><em>- Uniproceso:</em> Maneja un solo procesador.
+                                <br><em>- Multiproceso:</em> Distribuye la carga entre varios procesadores (ej. Solaris, SCO Unix).
+                            </li>
+                            <li><strong>Por Acceso a Servicios:</strong>
+                                <br><em>- De Red:</em> Conectan máquinas requiriendo conocer sintaxis y ubicación de recursos (ej. Netware, Windows Server).
+                                <br><em>- Distribuidos:</em> Los usuarios acceden a recursos de múltiples máquinas como si fuesen un servicio local único sin saber su ubicación.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </article>
         </section>
 
-        <!-- Mode Selector Switch -->
-        <div class="flex justify-center gap-2 sm:gap-3 mb-6 bg-slate-200/60 dark:bg-slate-800/60 p-1.5 rounded-2xl max-w-lg mx-auto border border-slate-300 dark:border-slate-700">
-            <button onclick="setQuizMode('test')" id="modeTestBtn" class="flex-1 py-2 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-blue-600 text-white shadow-md">
-                📝 Tipo Test
-            </button>
-            <button onclick="setQuizMode('short')" id="modeShortBtn" class="flex-1 py-2 px-2 sm:px-3 rounded-xl font-semibold text-xs sm:text-sm transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-300/50 dark:hover:bg-slate-700/50">
-                💬 Flashcards
-            </button>
-            <button onclick="setQuizMode('summary')" id="modeSummaryBtn" class="flex-1 py-2 px-2 sm:px-3 rounded-xl font-semibold text-xs sm:text-sm transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-300/50 dark:hover:bg-slate-700/50">
-                📖 Resumen / Apuntes
-            </button>
-        </div>
+        <!-- ================= JUEGO INTERACTIVO SECTION ================= -->
+        <section id="sec-juego" class="hidden max-w-4xl mx-auto space-y-6">
 
-        <!-- Study Summary Guide View Box (New Section) -->
-        <section id="studyGuideBox" class="hidden space-y-6">
-            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700">
-                <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 pb-4 mb-6">
-                    <span class="text-3xl">📚</span>
-                    <div>
-                        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Resumen Teórico Completo del Examen</h2>
-                        <p class="text-xs text-slate-500 dark:text-slate-400">Guía rápida de repaso para 1º SMR - Redes Locales</p>
+            <!-- Card de Progreso & Stats -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="w-full sm:w-auto">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">Progreso del Test</span>
+                    <h3 id="quiz-progress-text" class="text-lg font-bold text-gray-900 dark:text-white">Pregunta 1 de 52</h3>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 h-2.5 rounded-full mt-2 overflow-hidden w-48">
+                        <div id="quiz-progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 2%"></div>
                     </div>
                 </div>
 
-                <div class="space-y-8 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                    <!-- Tema 1 -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-base font-bold text-blue-600 dark:text-cyan-400 mb-2">1. Conceptos y Sistema de Comunicación</h3>
-                        <ul class="list-disc pl-5 space-y-1.5">
-                            <li><b>Emisor (Tx) y Receptor (Rx):</b> Elementos de inicio y fin de la comunicación.</li>
-                            <li><b>Transductor:</b> Cambia la naturaleza física de la señal (ej: de ondas mecánicas de voz a corriente eléctrica).</li>
-                            <li><b>Elementos Optativos:</b> Antenas y amplificadores que se añaden opcionalmente para alcanzar mayor distancia.</li>
-                            <li><b>Canal:</b> Medio físico por donde viaja la información (cable, aire...). <i>Nunca es perfecto</i> y siempre introduce interferencias electromagnéticas.</li>
-                        </ul>
+                <div class="flex items-center space-x-6">
+                    <div class="text-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block">Aciertos</span>
+                        <span id="score-correct" class="text-xl font-extrabold text-emerald-500">0</span>
                     </div>
-
-                    <!-- Tema 2 -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-base font-bold text-blue-600 dark:text-cyan-400 mb-2">2. Tipos de Comunicación según la Dirección</h3>
-                        <ul class="list-disc pl-5 space-y-1.5">
-                            <li><b>Simplex:</b> Unidireccional. El emisor sólo transmite y el receptor sólo escucha sin réplica (ej: Radio comercial, TV).</li>
-                            <li><b>Half-Duplex (Semiduplex):</b> Bidireccional pero <b>no simultáneo</b> (ej: Walkie-Talkie).</li>
-                            <li><b>Full-Duplex (Duplex):</b> Bidireccional y <b>simultáneo</b> (ej: Llamada telefónica).</li>
-                        </ul>
+                    <div class="text-center">
+                        <span class="text-xs text-gray-500 dark:text-gray-400 block">Fallos</span>
+                        <span id="score-incorrect" class="text-xl font-extrabold text-red-500">0</span>
                     </div>
-
-                    <!-- Tema 3 -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-base font-bold text-blue-600 dark:text-cyan-400 mb-2">3. Señales y Modos de Transmisión</h3>
-                        <ul class="list-disc pl-5 space-y-1.5">
-                            <li><b>Señal Analógica:</b> Valores continuos infinitos en el tiempo (senoidal).</li>
-                            <li><b>Señal Digital:</b> Valores discretos/finitos (1 y 0). Permite al receptor decidir de forma exacta facilitando la reconstrucción de la señal.</li>
-                            <li><b>Transmisión Asíncrona:</b> No usa reloj común. Delimita los datos mediante marcas de <code>START</code> y <code>STOP</code>. Ideal para largas distancias.</li>
-                            <li><b>Transmisión Serie vs Paralelo:</b> La transmisión en paralelo no sirve para largas distancias porque sus cables adyacentes sufren interferencias entre sí.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Tema 4 -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-base font-bold text-blue-600 dark:text-cyan-400 mb-2">4. Modulación y Parámetros de Onda</h3>
-                        <ul class="list-disc pl-5 space-y-1.5">
-                            <li><b>Fórmula de Onda:</b> <code>x(t) = A · sen(2π f t + φ)</code> donde <b>A</b> = Amplitud, <b>f</b> = Frecuencia y <b>φ</b> = Fase.</li>
-                            <li><b>Modulación Analógica:</b> AM (Amplitud), FM (Frecuencia), PM (Fase).</li>
-                            <li><b>Modulación Digital:</b> ASK, FSK, PSK y QAM (Cuadratura/Fase + Amplitud).</li>
-                        </ul>
-                    </div>
-
-                    <!-- Tema 5 -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-base font-bold text-blue-600 dark:text-cyan-400 mb-2">5. Multiplexación</h3>
-                        <ul class="list-disc pl-5 space-y-1.5">
-                            <li><b>TDM (Multiplexación por División de Tiempo):</b> Cada usuario usa la <b>totalidad</b> del canal durante su intervalo de tiempo (slot) asignado.</li>
-                            <li><b>FDM (Multiplexación por División de Frecuencia):</b> El ancho de banda se divide en múltiples subcanales/frecuencias independientes simultáneos.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Tema 6, 7 & 8 -->
-                    <div class="p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-base font-bold text-blue-600 dark:text-cyan-400 mb-2">6, 7 y 8. Líneas, Redes y Estándares</h3>
-                        <ul class="list-disc pl-5 space-y-1.5">
-                            <li><b>Líneas Públicas:</b> Pertenecen y son reparadas por el ISP (Proveedor de Servicios de Internet).</li>
-                            <li><b>Topología en BUS (Multipunto):</b> Varios equipos comparten una misma línea física.</li>
-                            <li><b>Red LAN (Local Area Network):</b> Extensión limitada (casa/oficina), usa líneas privadas y alcanza velocidades muy altas (hasta 10 Gbps).</li>
-                            <li><b>Estándar De Facto (De hecho):</b> Aceptado por el uso masivo e industria sin aprobación formal previa de un organismo de normalización.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="mt-8 text-center pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <button onclick="setQuizMode('test')" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md text-sm">
-                        🚀 Comprobar lo Aprendido en el Test
+                    <button onclick="restartQuiz()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors" title="Reiniciar Cuestionario">
+                        <i class="fa-solid fa-rotate-right mr-1"></i>Reiniciar
                     </button>
                 </div>
             </div>
-        </section>
 
-        <!-- Main Interactive Quiz Card -->
-        <section id="quizCard" class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700 relative overflow-hidden transition-all">
-            
-            <!-- Question Header Info -->
-            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700/80 pb-4 mb-5">
-                <span id="topicBadge" class="text-xs font-extrabold uppercase tracking-wider bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-lg border border-blue-200 dark:border-blue-800/50">
-                    Tema
-                </span>
-                <span id="progressText" class="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                    Pregunta 1 de 10
-                </span>
-            </div>
-
-            <!-- Question Title -->
-            <div class="mb-5">
-                <h3 id="questionText" class="text-lg sm:text-xl font-bold text-slate-800 dark:text-slate-100 leading-snug">
-                    Cargando pregunta...
-                </h3>
-            </div>
-
-            <!-- Interactive Diagram Display Canvas Box -->
-            <div id="interactiveDiagramBox" class="hidden mb-6 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700/80 shadow-inner text-center overflow-x-auto">
-                <div id="diagramContainer" class="flex flex-col items-center justify-center min-h-[140px] py-2">
-                    <!-- SVG or Interactive SVG Diagram rendered dynamically here -->
+            <!-- Card de Pregunta activa -->
+            <div id="quiz-card" class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700 shadow-md transition-all duration-300">
+                <div class="mb-6">
+                    <span id="question-category" class="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/40 dark:text-blue-300 rounded-full mb-3">
+                        Categoría
+                    </span>
+                    <h2 id="question-text" class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-snug">
+                        ¿Cargando pregunta...?
+                    </h2>
                 </div>
-            </div>
 
-            <!-- Test Options Container -->
-            <div id="testOptions" class="grid grid-cols-1 gap-3 mb-6">
-                <!-- Buttons dynamically populated -->
-            </div>
-
-            <!-- Short Answer Mode Container -->
-            <div id="shortModeBox" class="hidden space-y-4 mb-6">
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="text" id="shortAnswerInput" placeholder="Escribe tu respuesta breve o concepto clave aquí..." 
-                        class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm"
-                        onkeyup="if(event.key==='Enter') checkShortAnswer()">
-                    <button onclick="checkShortAnswer()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-all shadow-md shrink-0 text-sm">
-                        Comprobar
-                    </button>
+                <!-- Opciones -->
+                <div id="options-container" class="space-y-3">
+                    <!-- Dinámico con JS -->
                 </div>
-                <div class="text-center">
-                    <button onclick="revealShortAnswer()" class="text-xs text-slate-500 dark:text-slate-400 underline hover:text-blue-500 font-medium">
-                        💡 Ver solución completa (Modo Estudio / Flashcard)
+
+                <!-- Explicación/Feedback tras responder -->
+                <div id="feedback-box" class="mt-6 p-4 rounded-xl hidden text-sm">
+                    <!-- Dinámico con JS -->
+                </div>
+
+                <!-- Botón Siguiente -->
+                <div class="mt-6 flex justify-end">
+                    <button id="btn-next" onclick="nextQuestion()" disabled class="px-6 py-2.5 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-semibold rounded-xl cursor-not-allowed transition-all">
+                        Siguiente <i class="fa-solid fa-arrow-right ml-2"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Feedback Display Box -->
-            <div id="feedbackBox" class="hidden p-4 rounded-2xl mb-6 text-sm font-medium transition-all shadow-sm">
-                <p id="feedbackTitle" class="font-bold text-base mb-1"></p>
-                <div id="explanationText" class="text-xs sm:text-sm opacity-95 leading-relaxed"></div>
+            <!-- Card Final de Resultados -->
+            <div id="results-card" class="hidden bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-lg text-center space-y-6">
+                <div class="inline-flex p-4 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full text-4xl">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">¡Test Completado!</h2>
+                
+                <div class="max-w-md mx-auto bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-100 dark:border-gray-600">
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Puntuación Final</p>
+                    <div id="final-score" class="text-4xl font-black text-blue-600 dark:text-blue-400">0 / 0</div>
+                    <p id="final-percentage" class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">0% de aciertos</p>
+                </div>
+
+                <p id="final-feedback-text" class="text-gray-600 dark:text-gray-300 text-sm">
+                    ¡Buen esfuerzo! Revisa los contenidos para afianzar tus conocimientos.
+                </p>
+
+                <div class="pt-4 flex justify-center space-x-4">
+                    <button onclick="restartQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all">
+                        <i class="fa-solid fa-rotate-right mr-2"></i>Intentar de Nuevo
+                    </button>
+                    <button onclick="switchTab('apuntes')" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold rounded-xl transition-all">
+                        <i class="fa-solid fa-book-open mr-2"></i>Repasar Apuntes
+                    </button>
+                </div>
             </div>
 
-            <!-- Navigation Controls -->
-            <div class="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-700/80">
-                <button onclick="prevQuestion()" id="prevBtn" class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 dark:bg-slate-700/70 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
-                    ← Anterior
-                </button>
-                <button onclick="nextQuestion()" id="nextBtn" class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all flex items-center gap-1">
-                    <span>Siguiente</span> <span>→</span>
-                </button>
-            </div>
-
-        </section>
-
-        <!-- Final Summary View Box -->
-        <section id="summaryBox" class="hidden bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl text-center border border-slate-200 dark:border-slate-700">
-            <div class="inline-block p-4 bg-blue-50 dark:bg-blue-900/30 rounded-full mb-4">
-                <span class="text-5xl">🏆</span>
-            </div>
-            <h3 class="text-2xl font-bold mb-2 text-slate-800 dark:text-slate-100">¡Apartado Completado!</h3>
-            <p class="text-slate-600 dark:text-slate-300 mb-6 font-medium" id="summaryScoreText">Puntuación obtenida: 0 puntos</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-3">
-                <button onclick="restartQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-md text-sm">
-                    🔄 Repetir este Bloque
-                </button>
-                <button onclick="selectTopic('all')" class="px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition-all text-sm">
-                    🌐 Repasar TODO el Examen
-                </button>
-            </div>
         </section>
 
     </main>
 
     <!-- Footer -->
-    <footer class="text-center py-4 text-xs text-slate-400 dark:text-slate-500 border-t border-slate-200 dark:border-slate-800 mt-auto">
-        1º SMR - Módulo de Redes Local - Creado para Repaso de Examen
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 dark:text-gray-400">
+        <p>Unidad 2: Funcionamiento del ordenador — Preparación para Examen</p>
     </footer>
 
-    <!-- Quiz Logic & SVG Interactive Diagrams -->
+    <!-- SCRIPT DE DATOS Y LÓGICA -->
     <script>
-        // Interactive SVG Diagram Generators
-        const Diagrams = {
-            system: () => `
-                <div class="w-full max-w-xl mx-auto overflow-x-auto py-2">
-                    <svg viewBox="0 0 650 100" class="w-full h-auto text-xs font-sans">
-                        <!-- Boxes -->
-                        <rect x="10" y="30" width="60" height="40" rx="8" class="fill-blue-500 stroke-blue-600" />
-                        <text x="40" y="55" text-anchor="middle" fill="white" font-weight="bold">Tx</text>
-
-                        <rect x="100" y="30" width="85" height="40" rx="8" class="fill-indigo-500 stroke-indigo-600" />
-                        <text x="142" y="55" text-anchor="middle" fill="white" font-weight="bold">Transductor</text>
-
-                        <rect x="215" y="30" width="85" height="40" rx="8" class="fill-emerald-500 stroke-emerald-600" />
-                        <text x="257" y="48" text-anchor="middle" fill="white" font-weight="bold">Optativo</text>
-                        <text x="257" y="60" text-anchor="middle" fill="white" font-size="9">(Antena/Amp)</text>
-
-                        <rect x="330" y="30" width="70" height="40" rx="8" class="fill-amber-500 stroke-amber-600" />
-                        <text x="365" y="55" text-anchor="middle" fill="white" font-weight="bold">CANAL</text>
-
-                        <rect x="430" y="30" width="85" height="40" rx="8" class="fill-emerald-500 stroke-emerald-600" />
-                        <text x="472" y="48" text-anchor="middle" fill="white" font-weight="bold">Optativo</text>
-                        <text x="472" y="60" text-anchor="middle" fill="white" font-size="9">(Antena/Amp)</text>
-
-                        <rect x="545" y="30" width="60" height="40" rx="8" class="fill-blue-500 stroke-blue-600" />
-                        <text x="575" y="55" text-anchor="middle" fill="white" font-weight="bold">Rx</text>
-
-                        <!-- Arrows -->
-                        <path d="M70 50 L100 50 M185 50 L215 50 M300 50 L330 50 M400 50 L430 50 M515 50 L545 50" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow)" />
-                        <defs>
-                            <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
-                            </marker>
-                        </defs>
-                    </svg>
-                </div>
-            `,
-            simplex: () => `
-                <div class="w-full max-w-sm mx-auto py-2">
-                    <svg viewBox="0 0 300 70" class="w-full h-auto text-xs font-sans">
-                        <rect x="20" y="15" width="60" height="40" rx="8" fill="#0284c7" />
-                        <text x="50" y="40" text-anchor="middle" fill="white" font-weight="bold">Tx</text>
-                        
-                        <rect x="220" y="15" width="60" height="40" rx="8" fill="#64748b" />
-                        <text x="250" y="40" text-anchor="middle" fill="white" font-weight="bold">Rx</text>
-
-                        <path d="M 85 35 L 210 35" stroke="#0284c7" stroke-width="3" stroke-dasharray="6,4" class="pulse-soft" />
-                        <polygon points="210,30 220,35 210,40" fill="#0284c7" />
-                        <text x="150" y="25" text-anchor="middle" class="fill-slate-600 dark:fill-slate-300" font-size="11" font-weight="bold">Unidireccional (Radio)</text>
-                    </svg>
-                </div>
-            `,
-            halfDuplex: () => `
-                <div class="w-full max-w-md mx-auto py-2">
-                    <svg viewBox="0 0 360 80" class="w-full h-auto text-xs font-sans">
-                        <rect x="20" y="20" width="65" height="40" rx="8" fill="#0284c7" />
-                        <text x="52" y="45" text-anchor="middle" fill="white" font-weight="bold">Tx / Rx</text>
-                        
-                        <rect x="275" y="20" width="65" height="40" rx="8" fill="#0284c7" />
-                        <text x="307" y="45" text-anchor="middle" fill="white" font-weight="bold">Rx / Tx</text>
-
-                        <path d="M 90 30 L 265 30" stroke="#f59e0b" stroke-width="2.5" />
-                        <polygon points="265,26 273,30 265,34" fill="#f59e0b" />
-                        
-                        <path d="M 270 50 L 95 50" stroke="#f59e0b" stroke-width="2.5" />
-                        <polygon points="95,46 87,50 95,54" fill="#f59e0b" />
-
-                        <text x="180" y="20" text-anchor="middle" fill="#ef4444" font-size="11" font-weight="bold">NO SIMULTÁNEO (Walkie-Talkie)</text>
-                    </svg>
-                </div>
-            `,
-            duplex: () => `
-                <div class="w-full max-w-md mx-auto py-2">
-                    <svg viewBox="0 0 360 80" class="w-full h-auto text-xs font-sans">
-                        <rect x="20" y="20" width="65" height="40" rx="8" fill="#10b981" />
-                        <text x="52" y="45" text-anchor="middle" fill="white" font-weight="bold">Tx / Rx</text>
-                        
-                        <rect x="275" y="20" width="65" height="40" rx="8" fill="#10b981" />
-                        <text x="307" y="45" text-anchor="middle" fill="white" font-weight="bold">Rx / Tx</text>
-
-                        <path d="M 90 32 L 265 32" stroke="#10b981" stroke-width="3" />
-                        <polygon points="265,28 273,32 265,36" fill="#10b981" />
-                        
-                        <path d="M 270 48 L 95 48" stroke="#10b981" stroke-width="3" />
-                        <polygon points="95,44 87,48 95,52" fill="#10b981" />
-
-                        <text x="180" y="18" text-anchor="middle" fill="#10b981" font-size="11" font-weight="bold">SIMULTÁNEO (Llamada telefónica)</text>
-                    </svg>
-                </div>
-            `,
-            digitalVsAnalog: () => `
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full py-2">
-                    <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-                        <span class="text-xs font-bold text-slate-500 block mb-1">Analógica (Infinitos valores)</span>
-                        <svg viewBox="0 0 200 60" class="w-full h-12">
-                            <path d="M 10 30 Q 30 5 50 30 T 90 30 T 130 30 T 170 30" fill="none" stroke="#ef4444" stroke-width="2.5"/>
-                        </svg>
-                    </div>
-                    <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-                        <span class="text-xs font-bold text-slate-500 block mb-1">Digital (Discreta / 1s y 0s)</span>
-                        <svg viewBox="0 0 200 60" class="w-full h-12">
-                            <path d="M 10 50 L 30 50 L 30 10 L 70 10 L 70 50 L 110 50 L 110 10 L 150 10 L 150 50 L 180 50" fill="none" stroke="#0284c7" stroke-width="2.5"/>
-                            <text x="50" y="25" fill="#0284c7" font-weight="bold" font-size="10">1 (5V)</text>
-                            <text x="90" y="45" fill="#0284c7" font-weight="bold" font-size="10">0 (-2V)</text>
-                        </svg>
-                    </div>
-                </div>
-            `,
-            asyncTrans: () => `
-                <div class="w-full max-w-md mx-auto py-2">
-                    <svg viewBox="0 0 380 70" class="w-full h-auto text-xs font-sans">
-                        <rect x="10" y="15" width="50" height="40" rx="6" fill="#ef4444" />
-                        <text x="35" y="38" text-anchor="middle" fill="white" font-weight="bold">START</text>
-
-                        <rect x="70" y="15" width="240" height="40" rx="6" fill="#0284c7" />
-                        <text x="190" y="38" text-anchor="middle" fill="white" font-weight="bold">DATOS ÚTILES (Bits de información)</text>
-
-                        <rect x="320" y="15" width="50" height="40" rx="6" fill="#ef4444" />
-                        <text x="345" y="38" text-anchor="middle" fill="white" font-weight="bold">STOP</text>
-                    </svg>
-                    <p class="text-xs text-slate-500 mt-1">Saber inicio y fin sin reloj común -> Apta para largas distancias</p>
-                </div>
-            `,
-            tdm: () => `
-                <div class="w-full max-w-md mx-auto py-2">
-                    <svg viewBox="0 0 360 80" class="w-full h-auto text-xs font-sans">
-                        <rect x="10" y="20" width="60" height="40" rx="6" fill="#0284c7" />
-                        <text x="40" y="43" text-anchor="middle" fill="white" font-weight="bold">Slot U1</text>
-
-                        <rect x="75" y="20" width="60" height="40" rx="6" fill="#10b981" />
-                        <text x="105" y="43" text-anchor="middle" fill="white" font-weight="bold">Slot U2</text>
-
-                        <rect x="140" y="20" width="60" height="40" rx="6" fill="#f59e0b" />
-                        <text x="170" y="43" text-anchor="middle" fill="white" font-weight="bold">Slot U3</text>
-
-                        <rect x="205" y="20" width="60" height="40" rx="6" fill="#8b5cf6" />
-                        <text x="235" y="43" text-anchor="middle" fill="white" font-weight="bold">Slot U4</text>
-
-                        <path d="M 5 68 L 355 68" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
-                        <text x="180" y="65" text-anchor="middle" class="fill-slate-600 dark:fill-slate-300" font-size="10" font-weight="bold">TIEMPO (Cada usuario usa el 100% del canal en su turno)</text>
-                    </svg>
-                </div>
-            `,
-            fdm: () => `
-                <div class="w-full max-w-md mx-auto py-2">
-                    <svg viewBox="0 0 360 90" class="w-full h-auto text-xs font-sans">
-                        <rect x="10" y="10" width="340" height="15" rx="4" fill="#0284c7" />
-                        <text x="180" y="22" text-anchor="middle" fill="white" font-size="10">Canal / Frecuencia 1 (88 MHz)</text>
-
-                        <rect x="10" y="30" width="340" height="15" rx="4" fill="#10b981" />
-                        <text x="180" y="42" text-anchor="middle" fill="white" font-size="10">Canal / Frecuencia 2 (94.2 MHz)</text>
-
-                        <rect x="10" y="50" width="340" height="15" rx="4" fill="#f59e0b" />
-                        <text x="180" y="62" text-anchor="middle" fill="white" font-size="10">Canal / Frecuencia 3 (99.0 MHz)</text>
-                        
-                        <text x="180" y="82" text-anchor="middle" class="fill-slate-600 dark:fill-slate-300" font-size="10" font-weight="bold">Ancho de Banda dividido en Subcanales Simultáneos</text>
-                    </svg>
-                </div>
-            `,
-            busTopology: () => `
-                <div class="w-full max-w-md mx-auto py-2">
-                    <svg viewBox="0 0 360 80" class="w-full h-auto text-xs font-sans">
-                        <!-- Bus Line -->
-                        <line x1="20" y1="50" x2="340" y2="50" stroke="#0284c7" stroke-width="5" />
-                        <text x="350" y="54" fill="#0284c7" font-weight="bold" font-size="10">BUS</text>
-
-                        <!-- PC 1 -->
-                        <rect x="50" y="10" width="40" height="25" rx="4" fill="#64748b" />
-                        <text x="70" y="26" text-anchor="middle" fill="white" font-weight="bold">PC1</text>
-                        <line x1="70" y1="35" x2="70" y2="50" stroke="#64748b" stroke-width="2" />
-
-                        <!-- PC 2 -->
-                        <rect x="160" y="10" width="40" height="25" rx="4" fill="#64748b" />
-                        <text x="180" y="26" text-anchor="middle" fill="white" font-weight="bold">PC2</text>
-                        <line x1="180" y1="35" x2="180" y2="50" stroke="#64748b" stroke-width="2" />
-
-                        <!-- PC 3 -->
-                        <rect x="270" y="10" width="40" height="25" rx="4" fill="#64748b" />
-                        <text x="290" y="26" text-anchor="middle" fill="white" font-weight="bold">PC3</text>
-                        <line x1="290" y1="35" x2="290" y2="50" stroke="#64748b" stroke-width="2" />
-                    </svg>
-                </div>
-            `
-        };
-
-        // Complete Database from User Notes
-        const questionBank = [
-            // Tema 1
+        // ================= BANCO DE 52 PREGUNTAS =================
+        const questions = [
+            // --- 1. HISTORIA ---
             {
-                topicId: 1,
-                topicName: "1. Conceptos y Sistema",
-                question: "¿Cuál es la función del TRANSDUCTOR según el esquema del sistema de comunicación?",
-                diagramKey: "system",
-                options: [
-                    "Suministrar energía eléctrica al canal",
-                    "Cambiar la naturaleza física de la señal (ej: voz a señal eléctrica)",
-                    "Aumentar el alcance enviando la señal por antena",
-                    "Filtrar las interferencias del canal"
-                ],
-                correct: 1,
-                explanation: "El transductor transforma la naturaleza de la señal, como un micrófono que convierte la onda sonora de voz en una corriente eléctrica.",
-                keywords: ["naturaleza", "fisica", "voz", "electrica", "microfono"]
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Cuál de las siguientes máquinas se considera precursora de las actuales calculadoras?",
+                options: ["Máquina diferencial de Babbage", "Máquina aritmética de Blaise Pascal (Pascalina)", "El Ábaco chino", "La Mark I"],
+                answer: 1,
+                explain: "La máquina aritmética de Blaise Pascal (1642) fue la primera calculadora mecánica capaz de hacer sumas y restas."
             },
             {
-                topicId: 1,
-                topicName: "1. Conceptos y Sistema",
-                question: "¿Qué característica define al CANAL según tus apuntes?",
-                diagramKey: "system",
-                options: [
-                    "Es un medio perfecto que no degrada la señal",
-                    "Es el medio físico por donde viaja la información, el cual NUNCA es perfecto y sufre interferencias electromagnéticas",
-                    "Solo sirve para transmitir señales digitales",
-                    "Solo se utiliza si hay elementos optativos"
-                ],
-                correct: 1,
-                explanation: "El canal es el medio de transporte pero no es perfecto y siempre introduce interferencias electromagnéticas.",
-                keywords: ["interferencias", "electromagneticas", "medio", "no perfecto"]
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Quién estableció los principios teóricos del funcionamiento de los ordenadores con programa almacenado?",
+                options: ["Charles Babbage", "Herman Hollerith", "John von Neumann", "Gottfried Leibniz"],
+                answer: 2,
+                explain: "John von Neumann definió la arquitectura básica de programa almacenado en memoria que usan los ordenadores actuales."
             },
             {
-                topicId: 1,
-                topicName: "1. Conceptos y Sistema",
-                question: "¿Qué son los 'elementos optativos' (como antenas o amplificadores)?",
-                options: [
-                    "Elementos indispensables para que exista cualquier comunicación",
-                    "Elementos que a veces se necesitan para lograr llegar a una mayor distancia",
-                    "Cables de fibra óptica de alta velocidad",
-                    "Software de red para conectar la IP"
-                ],
-                correct: 1,
-                explanation: "Son opcionales (optativos); se intercalan para ampliar distancia como amplificadores o antenas.",
-                keywords: ["antenas", "amplificadores", "distancia", "opcional", "a veces"]
-            },
-
-            // Tema 2
-            {
-                topicId: 2,
-                topicName: "2. Tipos de Comunicación",
-                question: "¿Qué tipo de comunicación representa esta figura donde la transmisión es bidireccional PERO NO simultánea?",
-                diagramKey: "halfDuplex",
-                options: [
-                    "Simplex",
-                    "Half-Duplex / Semiduplex (Ej: Walkie-Talkie)",
-                    "Full-Duplex",
-                    "Multipunto"
-                ],
-                correct: 1,
-                explanation: "En Half-Duplex (o Semiduplex) ambos pueden enviar información pero no al mismo tiempo.",
-                keywords: ["half", "semiduplex", "walkie", "no simultaneo"]
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Cuál fue el primer ordenador comercial de la historia?",
+                options: ["ENIAC", "UNIVAC I", "EDVAC", "IBM 701"],
+                answer: 1,
+                explain: "El UNIVAC I (de Mauchly y Eckert) fue el primer ordenador fabricado para uso comercial utilizando cintas magnéticas."
             },
             {
-                topicId: 2,
-                topicName: "2. Tipos de Comunicación",
-                question: "En una emisión de Radio tradicional, el receptor escucha sin posibilidad de réplica. ¿Qué tipo de comunicación es?",
-                diagramKey: "simplex",
-                options: [
-                    "Simplex",
-                    "Duplex",
-                    "Half-Duplex",
-                    "Síncrona"
-                ],
-                correct: 0,
-                explanation: "Simplex es unidireccional: el emisor siempre transmite y el receptor sólo escucha sin réplica.",
-                keywords: ["simplex", "unidireccional", "radio"]
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Qué tecnología caracteriza a la 1ª Generación de ordenadores (1946-1955)?",
+                options: ["Transistores", "Válvulas de vacío", "Circuitos integrados", "Microprocesadores"],
+                answer: 1,
+                explain: "La primera generación utilizaba válvulas de vacío electrónicas, por lo que eran de enorme tamaño y consumían mucha energía."
             },
             {
-                topicId: 2,
-                topicName: "2. Tipos de Comunicación",
-                question: "¿Qué tipo de comunicación ocurre en una llamada telefónica convencional?",
-                diagramKey: "duplex",
-                options: [
-                    "Simplex",
-                    "Half-Duplex",
-                    "Duplex (Simultáneo)",
-                    "Asíncrona"
-                ],
-                correct: 2,
-                explanation: "En la comunicación Duplex ambos participantes pueden hablar y escuchar simultáneamente.",
-                keywords: ["duplex", "simultaneo", "llamada"]
+                cat: "1. Historia de los Ordenadores",
+                q: "¿En qué generación de ordenadores se introduce el transistor?",
+                options: ["1ª Generación", "2ª Generación", "3ª Generación", "4ª Generación"],
+                answer: 1,
+                explain: "La 2ª Generación (1955-1964) sustituyó las válvulas de vacío por transistores, reduciendo drásticamente el tamaño y aumentando la velocidad."
+            },
+            {
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Qué componente revolucionario dio origen a la 4ª Generación de ordenadores?",
+                options: ["Válvula de vacío", "Circuito Integrado SSI", "Microprocesador", "Transistor de germanio"],
+                answer: 2,
+                explain: "El microprocesador (como el Intel 4004) integró toda la CPU en un solo chip dando origen a la 4ª Generación y los ordenadores personales."
+            },
+            {
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Qué máquina utilizaba tarjetas perforadas para procesar el censo de EE.UU. en 1890 y dio origen a la empresa CTR (luego IBM)?",
+                options: ["Máquina Tabuladora de Herman Hollerith", "Pascalina", "ENIAC", "Mark I"],
+                answer: 0,
+                explain: "Herman Hollerith diseñó la máquina tabuladora basada en tarjetas perforadas y fundó la empresa CTR, renombrada más tarde como IBM."
+            },
+            {
+                cat: "1. Historia de los Ordenadores",
+                q: "La calculadora automática MARK I construida por Howard H. Aiken destacaba por:",
+                options: ["Funcionar con microchips", "Medir 17 metros y pesar 70 toneladas", "Ser de bolsillo", "Utilizar inteligencia artificial"],
+                answer: 1,
+                explain: "La MARK I (1944) era una calculadora electromecánica gigantesca de 17 metros de largo y 70 toneladas de peso."
             },
 
-            // Tema 3
+            // --- 2. ARQUITECTURA VON NEUMANN Y CPU ---
             {
-                topicId: 3,
-                topicName: "3. Señales y Transmisión",
-                question: "¿Qué ventaja tiene la SEÑAL DIGITAL respecto a la analógica en la recepción?",
-                diagramKey: "digitalVsAnalog",
-                options: [
-                    "Toma infinitos valores continuos en el tiempo",
-                    "Toma un número finito o discreto de valores (1 y 0), haciéndola mucho más fácil de reproducir/decidir en el receptor",
-                    "No necesita ningún tipo de cable ni canal",
-                    "Es más lenta pero alcanza distancias infinitas"
-                ],
-                correct: 1,
-                explanation: "La señal digital al ser discreta (p. ej. 1 y 0) permite al receptor decidir entre valores fijos reconstruyéndose mejor.",
-                keywords: ["finito", "discreto", "1 y 0", "facil"]
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿En la memoria principal de la arquitectura Von Neumann se almacenan...?",
+                options: ["Solo los datos del usuario", "Solo los programas", "Los programas en ejecución y los datos que manejan", "Los registros de la CPU únicamente"],
+                answer: 2,
+                explain: "La principal característica de Von Neumann es que la memoria guarda simultáneamente tanto las instrucciones del programa como los datos."
             },
             {
-                topicId: 3,
-                topicName: "3. Señales y Transmisión",
-                question: "¿Cómo funciona la transmisión ASÍNCRONA mostrada en el esquema?",
-                diagramKey: "asyncTrans",
-                options: [
-                    "Mediante un reloj común que muestrea la señal",
-                    "Pactando secuencias de START (comienzo) y STOP (finalización) para delimitar los datos",
-                    "Enviando 8 cables a la vez en paralelo",
-                    "Utilizando modulación QAM exclusivamente"
-                ],
-                correct: 1,
-                explanation: "La transmisión asíncrona utiliza marcas de `start` y `stop` para enviar datos a largas distancias sin depender de relojes síncronos.",
-                keywords: ["start", "stop", "marcas", "comienzo", "finalizacion"]
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué unidad de la CPU interpreta y ejecuta las instrucciones y genera las señales de control?",
+                options: ["UAL (Unidad Aritmético-Lógica)", "UC (Unidad de Control)", "Memoria Caché", "Registro Acumulador"],
+                answer: 1,
+                explain: "La Unidad de Control (UC) gobierna todo el sistema, lee las instrucciones de memoria y las ejecuta mediante señales de control."
             },
             {
-                topicId: 3,
-                topicName: "3. Señales y Transmisión",
-                question: "¿Por qué la transmisión en PARALELO no es adecuada para largas distancias?",
-                options: [
-                    "Porque las distintas líneas del canal sufren interferencias entre sí",
-                    "Porque es más lenta que la transmisión en serie",
-                    "Porque requiere fibra óptica de forma obligatoria",
-                    "Porque no existen conectores compatibles"
-                ],
-                correct: 0,
-                explanation: "En paralelo se envían bits simultáneos por cables adyacentes; en distancias largas las líneas interfieren entre sí.",
-                keywords: ["interferencias", "interfieren", "lineas"]
-            },
-
-            // Tema 4
-            {
-                topicId: 4,
-                topicName: "4. Modulación",
-                question: "En la fórmula de la onda x(t) = A · sen(2π f t + φ), ¿qué representa cada parámetro?",
-                options: [
-                    "A = Ancho de banda, f = Fase, φ = Frecuencia",
-                    "A = Amplitud, f = Frecuencia, φ = Fase",
-                    "A = Voltios, f = Bits, φ = Tiempo",
-                    "A = Atenuación, f = Filtro, φ = Frecuencia"
-                ],
-                correct: 1,
-                explanation: "En la ecuación matemática de una onda: A es la Amplitud, f es la Frecuencia y φ es la Fase.",
-                keywords: ["amplitud", "frecuencia", "fase"]
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué componente de la CPU realiza las operaciones matemáticas y lógicas?",
+                options: ["UC (Unidad de Control)", "UAL / ALU", "CP (Contador de Programa)", "RI (Registro de Instrucción)"],
+                answer: 1,
+                explain: "La UAL (Unidad Aritmético-Lógica) ejecuta las operaciones de cálculo (sumas, restas) y comparaciones lógicas booleana."
             },
             {
-                topicId: 4,
-                topicName: "4. Modulación",
-                question: "¿Cuáles son las modulaciónes empleadas para SEÑALES DIGITALES?",
-                options: [
-                    "AM, FM y PM",
-                    "ASK, FSK, PSK y QAM",
-                    "LAN, MAN y WAN",
-                    "TDM y FDM"
-                ],
-                correct: 1,
-                explanation: "Modulación digital: ASK (Amplitud), FSK (Frecuencia), PSK (Fase) y QAM (Fase y Cuadratura). AM, FM y PM son analógicas.",
-                keywords: ["ask", "fsk", "psk", "qam"]
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué registro contiene la dirección de memoria de la PRÓXIMA instrucción a ejecutar?",
+                options: ["RI (Registro de Instrucción)", "RDM (Registro Dirección Memoria)", "CP (Contador de Programa)", "RIM (Registro Intercambio Memoria)"],
+                answer: 2,
+                explain: "El Contador de Programa (CP) o Program Counter apunta siempre a la dirección de memoria donde está la siguiente instrucción."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué elemento marca el ritmo de trabajo y sincroniza las operaciones internas de la CPU?",
+                options: ["Secuenciador", "Reloj del sistema", "Descodificador", "Bus de datos"],
+                answer: 1,
+                explain: "El Reloj emite impulsos eléctricos a intervalos constantes (medidos en GHz) marcando el ritmo de proceso."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué es la FPU (Floating-Point Unit) alojada dentro de la UAL?",
+                options: ["Unidad para imprimir documentos", "Coprocesador matemático especializado en coma flotante y decimales", "Unidad de almacenamiento en la nube", "El reloj principal"],
+                answer: 1,
+                explain: "La FPU gestiona la aritmética con números fraccionarios, decimales y operaciones trigonométricas/logarítmicas."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué registro almacena temporalmente la instrucción que se está ejecutando en ese preciso momento?",
+                options: ["CP (Contador de Programa)", "RI (Registro de Instrucción)", "Flags", "Puntero de Pila"],
+                answer: 1,
+                explain: "El RI (Registro de Instrucción) guarda el código de la instrucción en curso mientras es analizado por el descodificador."
             },
 
-            // Tema 5
+            // --- 3. BUSES, MEMORIA Y PERIFÉRICOS ---
             {
-                topicId: 5,
-                topicName: "5. Multiplexación",
-                question: "¿En qué consiste la MULTIPLEXACIÓN EN TIEMPO (TDM)?",
-                diagramKey: "tdm",
-                options: [
-                    "Cada usuario usa una frecuencia fija diferente al mismo tiempo",
-                    "Cada usuario toma la totalidad del canal pero durante un intervalo de tiempo determinado (SLOT)",
-                    "División del cable metálico en hilos de fibra",
-                    "Conexión exclusiva mediante punto a punto"
-                ],
-                correct: 1,
-                explanation: "En TDM, cada usuario dispone del 100% del canal durante su franja de tiempo asignada llamada SLOT.",
-                keywords: ["slot", "tiempo determinado", "totalidad"]
+                cat: "3. Buses y Memoria",
+                q: "Si el bus de direcciones de una CPU tiene 10 bits, ¿cuántas posiciones de memoria puede direccionar directamente?",
+                options: ["64 posiciones", "512 posiciones", "1024 posiciones (2^10)", "4096 posiciones"],
+                answer: 2,
+                explain: "Con n bits en el bus de direcciones se pueden direccionar 2^n posiciones. 2^10 = 1024 celdas."
             },
             {
-                topicId: 5,
-                topicName: "5. Multiplexación",
-                question: "¿En qué consiste la MULTIPLEXACIÓN EN FRECUENCIA (FDM)?",
-                diagramKey: "fdm",
-                options: [
-                    "Dividir el ancho de banda total en subcanales/frecuencias más pequeños",
-                    "Transmitir un bit detrás de otro en serie",
-                    "Asignar slots temporales por usuario",
-                    "Conectar ordenadores mediante un BUS compartido"
-                ],
-                correct: 0,
-                explanation: "FDM divide el rango de frecuencias (ancho de banda) en subcanales independientes para emitir simultáneamente.",
-                keywords: ["frecuencia", "subcanales", "ancho de banda"]
+                cat: "3. Buses y Memoria",
+                q: "Si el bus de direcciones posee 6 bits, ¿a cuántas posiciones de memoria se podrá acceder?",
+                options: ["32", "64 (2^6)", "128", "256"],
+                answer: 1,
+                explain: "2 elevado a la potencia de 6 equivale a 64 posiciones de memoria direccionables."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "¿Cuál es la función del Bus de Datos?",
+                options: ["Indicar la dirección a leer", "Transmitir impulsos de sincronización", "Intercambiar datos e instrucciones entre CPU y el resto de unidades", "Dar corriente eléctrica a los periféricos"],
+                answer: 2,
+                explain: "El bus de datos es el camino bidireccional por donde viaja la información entre la CPU y la memoria/periféricos."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "¿Por qué se dice que la memoria RAM es volátil?",
+                options: ["Porque es muy rápida y barata", "Porque su contenido desaparece al apagar el ordenador", "Porque no se puede escribir en ella", "Porque guarda datos para siempre"],
+                answer: 1,
+                explain: "La RAM requiere suministro eléctrico continuo para mantener la información; al quitar la alimentación, los datos se pierden."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "¿Cuál de estos niveles de memoria de la jerarquía es el MÁS RÁPIDO y de menor capacidad?",
+                options: ["Memoria RAM", "Disco Duro SSD", "Registros de la CPU", "Memoria Caché L3"],
+                answer: 2,
+                explain: "Los registros internos de la CPU están en el nivel 0, ofreciendo el tiempo de acceso más bajo (<1 ns)."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "La memoria intermedia situada entre la CPU y la RAM para acelerar los accesos frecuentes se denomina:",
+                options: ["Memoria ROM", "Memoria Caché", "Memoria Virtual", "Disco Auxiliar"],
+                answer: 1,
+                explain: "La memoria caché guarda copias de datos de la RAM a los que la CPU accede frecuentemente para evitar tiempos de espera."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "¿Qué ocurre con la capacidad y velocidad a medida que descendemos en la pirámide de jerarquía de memoria?",
+                options: ["Aumenta la velocidad y sube el precio", "Aumenta la capacidad, disminuye la velocidad y baja el coste por bit", "Disminuye la capacidad y aumenta la velocidad", "No cambia ningún parámetro"],
+                answer: 1,
+                explain: "Al bajar de nivel: las memorias son más grandes en capacidad, más lentas en respuesta y significativamente más baratas."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿Cuál de los siguientes dispositivos es un periférico exclusivamente de ENTRADA?",
+                options: ["Impresora", "Monitor", "Escáner de código de barras", "Disco duro externo"],
+                answer: 2,
+                explain: "El escáner de código de barras capta datos del exterior y los envía a la CPU, por lo que es de entrada."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿Qué tipo de periférico es una tarjeta de red Wi-Fi o Módem?",
+                options: ["De entrada", "De salida", "De almacenamiento", "De comunicación"],
+                answer: 3,
+                explain: "Permiten la interacción e intercambio de datos entre ordenadores a través de redes, por lo que son de comunicación."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿Qué es el POST en el proceso de arranque del ordenador?",
+                options: ["Un programa para navegar por internet", "Una autocomprobación diagnóstica del hardware al encender (Power On Self Test)", "El sistema operativo de Microsoft", "Un tipo de memoria rápida"],
+                answer: 1,
+                explain: "El POST (Power On Self Test) es el diagnóstico grabado en la ROM/BIOS que comprueba el hardware antes de arrancar."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿Dónde están grabadas las rutinas básicas del sistema de entrada/salida (BIOS)?",
+                options: ["En la memoria RAM", "En el disco duro", "En un chip de memoria de solo lectura (ROM)", "En un pendrive"],
+                answer: 2,
+                explain: "La BIOS está grabada permanentemente en un chip de memoria ROM de la placa base."
             },
 
-            // Tema 6
+            // --- 4. EL SOFTWARE ---
             {
-                topicId: 6,
-                topicName: "6. Líneas y Titularidad",
-                question: "¿Quién es el responsable de reparar una avería en una LÍNEA PÚBLICA?",
-                options: [
-                    "El usuario particular",
-                    "El fabricante del ordenador",
-                    "El ISP (Proveedor de Servicios de Internet)",
-                    "El ayuntamiento local"
-                ],
-                correct: 2,
-                explanation: "Las líneas públicas pertenecen a la compañía prestadora del servicio (ISP), por lo que el ISP subsana la avería.",
-                keywords: ["isp", "proveedor"]
+                cat: "4. El Software del Ordenador",
+                q: "¿Cómo se clasifica el software según el TIPO DE TRABAJO que realiza?",
+                options: ["Shareware, Freeware y Libre", "De Sistema, De Aplicación y De Programación", "Centralizado y Distribuido", "Monotarea y Multitarea"],
+                answer: 1,
+                explain: "Según la tarea realizada se divide en: Sistema (SO/drivers), Aplicación (programas de usuario) y Programación (IDE/compiladores)."
             },
             {
-                topicId: 6,
-                topicName: "6. Líneas y Titularidad",
-                question: "¿Cómo se denomina la topología donde varios equipos comparten una misma línea física?",
-                diagramKey: "busTopology",
-                options: [
-                    "Línea punto a punto",
-                    "Línea multipunto o BUS",
-                    "Red WAN nacional",
-                    "Transmisión asíncrona"
-                ],
-                correct: 1,
-                explanation: "En la línea multipunto, múltiples dispositivos comparten un cable/línea común denominada BUS.",
-                keywords: ["bus", "multipunto"]
+                cat: "4. El Software del Ordenador",
+                q: "Un programa que se distribuye gratis durante un periodo de prueba y luego requiere pago es:",
+                options: ["Freeware", "Shareware", "Software de Dominio Público", "Software Libre"],
+                answer: 1,
+                explain: "El Shareware (ej. WinRAR) permite evaluar la aplicación de forma gratuita durante un tiempo limitado."
+            },
+            {
+                cat: "4. El Software del Ordenador",
+                q: "¿Qué caracteriza al Freeware?",
+                options: ["Es de pago obligatorio", "Se distribuye gratuitamente pero suele ser de código cerrado con restricciones", "Permite modificar libremente el código fuente", "No se puede redistribuir"],
+                answer: 1,
+                explain: "El Freeware se distribuye sin coste económico, pero el código suele ser cerrado y propiedad del autor."
+            },
+            {
+                cat: "4. El Software del Ordenador",
+                q: "¿Cuál de estas NO es una de las libertades del Software Libre según GNU?",
+                options: ["Usar el programa con cualquier propósito", "Estudiar cómo funciona y adaptarlo", "Modificarlo y obligar a venderlo a precio elevado", "Mejorarlo y publicar las mejoras"],
+                answer: 2,
+                explain: "Las libertades del software libre se centran en el uso, estudio, modificación y compartición del código, no en forzar ventas."
+            },
+            {
+                cat: "4. El Software del Ordenador",
+                q: "¿Qué tipo de software es un Entorno de Desarrollo Integrado (IDE) como Eclipse o Visual Studio?",
+                options: ["Software de Aplicación", "Software de Sistema", "Software de Programación", "Software Multimedia"],
+                answer: 2,
+                explain: "Los IDE proporcionan herramientas a los programadores para escribir, compilar y depurar código."
+            },
+            {
+                cat: "4. El Software del Ordenador",
+                q: "¿Qué nombre recibe el software diseñado expresamente para resolver las necesidades concretas de una empresa (ej. gestión de alumnos o cuentas bancarias)?",
+                options: ["Software de Aplicación General", "Software de Uso Específico", "Freeware", "Sistema Operativo"],
+                answer: 1,
+                explain: "El software de uso específico o a medida está desarrollado para solventar los requerimientos particulares de una entidad."
+            },
+            {
+                cat: "4. El Software del Ordenador",
+                q: "WinZip o WinRAR se citan habitualmente como ejemplos clásicos de software de tipo:",
+                options: ["Freeware", "Shareware", "Software Libre", "Dominio Público"],
+                answer: 1,
+                explain: "Se distribuyen en modalidad Shareware (período de evaluación sin costo inicial)."
             },
 
-            // Tema 7
+            // --- 5. SISTEMAS OPERATIVOS ---
             {
-                topicId: 7,
-                topicName: "7. Redes (LAN/WAN...)",
-                question: "¿Qué características definen a una red LAN (Local Area Network)?",
-                options: [
-                    "Tamaño limitado (casa/oficina), líneas privadas y velocidad muy elevada (hasta 10 Gbps)",
-                    "Tamaño de una ciudad con líneas públicas",
-                    "Escritorio/habitación con conexión inalámbrica lenta",
-                    "Red mundial gestionada por Movistar"
-                ],
-                correct: 0,
-                explanation: "Una LAN cubre una casa u oficina, utiliza líneas privadas de alta velocidad (hasta 10 Gbps).",
-                keywords: ["10 gbps", "privadas", "casa", "oficina"]
+                cat: "5. El Sistema Operativo",
+                q: "¿Qué parte del Sistema Operativo se encarga del control central, la gestión de memoria y el proceso de trabajo?",
+                options: ["Shell", "Kernel (Núcleo)", "Sistema de Archivos", "Driver de impresora"],
+                answer: 1,
+                explain: "El Kernel o núcleo es la parte fundamental del SO que interactúa directamente con el hardware y gestiona recursos."
             },
             {
-                topicId: 8,
-                topicName: "8. Estándares",
-                question: "¿Qué es un Estándar DE FACTO (De hecho)?",
-                options: [
-                    "Aquel aprobado obligatoriamente por una asociación oficial de estándares",
-                    "Una tecnología aceptada por la industria y uso masivo sin estar formalmente aprobada",
-                    "Un cable privado de larga distancia",
-                    "Un tipo de modulación digital"
-                ],
-                correct: 1,
-                explanation: "El estándar 'De Facto' se impone por la industria y costumbre sin contar con una aprobación oficial formal.",
-                keywords: ["industria", "sin estar formalmente aprobada", "de hecho"]
+                cat: "5. El Sistema Operativo",
+                q: "¿Qué es el Shell o Intérprete de Comandos en un Sistema Operativo?",
+                options: ["La fuente de alimentación", "La interfaz que traduce las peticiones del usuario al Kernel", "Un virus informático", "El reloj interno"],
+                answer: 1,
+                explain: "El Shell es la capa o interfaz (gráfica GUI o de texto) con la que interactúa el usuario para enviar órdenes al Kernel."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "¿Qué recurso crea el Sistema Operativo en el disco duro cuando la memoria RAM física es insuficiente?",
+                options: ["Memoria ROM", "Memoria Caché L1", "Memoria Virtual", "Registro de estado"],
+                answer: 2,
+                explain: "La memoria virtual utiliza espacio en el disco duro para emular memoria RAM adicional cuando esta se agota."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "Un Sistema Operativo que permite ejecutar varios procesos simultáneamente se clasifica como:",
+                options: ["Monotarea", "Multitarea", "Monousuario", "Centralizado"],
+                answer: 1,
+                explain: "Los sistemas multitarea (como Windows, Linux o macOS) pueden ejecutar y coordinar varios programas al mismo tiempo."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "Un sistema donde varios ordenadores están conectados de forma transparente y el usuario accede a todos los recursos como un único sistema integrado es:",
+                options: ["Sistema de red", "Sistema distribuido", "Sistema monoproceso", "MS-DOS"],
+                answer: 1,
+                explain: "En los sistemas distribuidos, el usuario utiliza los recursos remotos como si fuesen locales sin conocer su ubicación física exacta."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "¿Cuál de estos Sistemas Operativos es considerado HISTÓRICAMENTE como Monotarea y Monousuario?",
+                options: ["Windows 11", "MS-DOS", "Linux Ubuntu", "macOS Sonoma"],
+                answer: 1,
+                explain: "MS-DOS únicamente permitía ejecutar una tarea a la vez y para un único usuario."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "¿Qué función del Sistema Operativo se encarga de evitar conflictos cuando dos aplicaciones quieren imprimir a la vez?",
+                options: ["Gestión y asignación de recursos hardware", "Descodificación de instrucciones", "El reloj interno", "El cálculo en coma flotante"],
+                answer: 0,
+                explain: "El SO administra eficientemente los recursos del hardware evitando colisiones entre los programas en ejecución."
+            },
+
+            // --- REFUERZO ADICIONAL VARIADO ---
+            {
+                cat: "Conceptos Fundamentales",
+                q: "¿En qué unidad de frecuencia se mide la velocidad del reloj de los procesadores actuales?",
+                options: ["Megabytes (MB)", "Gigahercios (GHz)", "MIPS", "Nanosegundos (ns)"],
+                answer: 1,
+                explain: "El Hertzio (Hz) mide los ciclos por segundo. Los procesadores actuales funcionan a frecuencias superiores a varios Gigahercios (GHz)."
+            },
+            {
+                cat: "Conceptos Fundamentales",
+                q: "¿Qué significa las siglas MIPS en evaluación de rendimiento informático?",
+                options: ["Memoria Interna Para Sistemas", "Millones de Instrucciones Por Segundo", "Microprocesadores Integrados Para Servidores", "Módulo de Intercambio de Procesos"],
+                answer: 1,
+                explain: "MIPS es la sigla de Millones de Instrucciones Por Segundo, una medida de velocidad de proceso."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué registro de la CPU almacena el resultado directo de una operación efectuada por la UAL?",
+                options: ["Contador de Programa (CP)", "Registro Acumulador", "Registro Dirección Memoria (RDM)", "Descodificador"],
+                answer: 1,
+                explain: "El resultado de las operaciones procesadas por la UAL se deposita habitualmente en el registro acumulador."
+            },
+            {
+                cat: "1. Historia de los Ordenadores",
+                q: "¿Qué fue la ENIAC (1945)?",
+                options: ["El primer ordenador personal", "Uno de los primeros ordenadores electrónicos de propósito general con válvulas de vacío", "El primer software libre", "Un sistema operativo de IBM"],
+                answer: 1,
+                explain: "ENIAC (Electronic Numerical Integrator and Computer) fue una de las primeras computadoras 100% electrónicas de la historia."
+            },
+            {
+                cat: "1. Historia de los Ordenadores",
+                q: "El programa de la Quinta Generación de computadoras lanzado por Japón buscaba promover:",
+                options: ["El uso de válvulas gigantes", "Inteligencia artificial, procesamiento en paralelo y lenguaje natural", "Los disquetes flexibles", "Los lenguajes máquina pura"],
+                answer: 1,
+                explain: "La 5ª Generación buscaba desarrollar máquinas capaces de procesar en paralelo y comunicarse en lenguaje cotidiano con Inteligencia Artificial."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "Si disponemos de una memoria de 1 KB, ¿cuántas celdas o bytes de capacidad de almacenamiento tiene?",
+                options: ["1000 bytes", "1024 bytes", "512 bytes", "2048 bytes"],
+                answer: 1,
+                explain: "En informática, 1 Kilobyte equivale exactamente a 2^10 = 1024 bytes."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "Un procesador con bus de direcciones de 32 bits puede direccionar un máximo teórico de memoria RAM de:",
+                options: ["64 MB", "512 MB", "4 GB (2^32 bytes)", "16 TB"],
+                answer: 2,
+                explain: "2^32 bytes equivalen exactamente a 4 Gigabytes (4 GB) de memoria direccionable."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "¿Qué diferencia existe entre un procesador de 32 bits y uno de 64 bits respecto a la memoria?",
+                options: ["El de 64 bits es más lento", "El de 64 bits puede direccionar muchísima más memoria RAM (prácticamente casi ilimitada)", "El de 32 bits no usa memoria Caché", "Ninguna diferencia"],
+                answer: 1,
+                explain: "Mientras que 32 bits se limita a 4 GB de RAM, una arquitectura de 64 bits puede direccionar hasta 2^64 bytes de RAM."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿Cuál de estos dispositivos de almacenamiento es de tipo ÓPTICO?",
+                options: ["Disco duro SSD", "Disco Blu-Ray / DVD", "Memoria Flash USB", "Tarjeta microSD"],
+                answer: 1,
+                explain: "Los CD, DVD y Blu-Ray son soportes ópticos que utilizan tecnología láser para la lectura y escritura de datos."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿En qué unidades se mide la potencia de cálculo científico mediante operaciones en coma flotante?",
+                options: ["MIPS", "MFLOPS (Millions of Floating-point Operations Per Second)", "GHz", "Bytes"],
+                answer: 1,
+                explain: "Los MFLOPS representan los millones de operaciones de punto flotante por segundo realizadas."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "El registro encargado de conectar la celda de memoria direccionada para la transferencia de datos de entrada/salida es el:",
+                options: ["RIM (Registro Intercambio Memoria)", "CP (Contador de Programa)", "RI (Registro de Instrucción)", "Flags"],
+                answer: 0,
+                explain: "El RIM (Registro de Intercambio de Memoria) contiene el dato que se va a escribir o que se acaba de leer de la RAM."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿En qué dos fases se divide la ejecución de cualquier instrucción en la CPU?",
+                options: ["Fase de apagado y encendido", "Fase de Búsqueda y Fase de Ejecución", "Fase de formateo y lectura", "Fase de entrada y salida"],
+                answer: 1,
+                explain: "Cualquier instrucción pasa primero por la Fase de Búsqueda (traerla de la RAM a la UC) y la Fase de Ejecución (realizar la acción)."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "El Proyecto GNU se inició en 1984 con el objetivo principal de:",
+                options: ["Fabricar chips de silicio", "Crear un sistema operativo completo de software libre tipo UNIX", "Vender ordenadores IBM", "Crear la memoria RAM"],
+                answer: 1,
+                explain: "El proyecto GNU fue creado para ofrecer un sistema operativo completamente libre compatible con UNIX."
+            },
+            {
+                cat: "Conceptos Fundamentales",
+                q: "¿Qué es un byte?",
+                options: ["Un conjunto de 4 bits", "Un conjunto de 8 bits", "Un millón de bits", "Un ciclo de reloj"],
+                answer: 1,
+                explain: "Un byte es la unidad de información compuesta por una agrupación de 8 bits."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué componente de la UC traduce y analiza el código de operación extraído de la memoria?",
+                options: ["Descodificador de Instrucción (DI)", "FPU", "Registro Acumulador", "Unidad de Control"],
+                answer: 0,
+                explain: "El descodificador analiza el código de la instrucción retenida en el RI para generar las órdenes de control."
+            },
+            {
+                cat: "5. El Sistema Operativo",
+                q: "Los sistemas que permiten a múltiples usuarios trabajar y compartir recursos en red a la vez se denominan:",
+                options: ["Monousuario", "Multiusuario", "Uniprocesador", "Monotarea"],
+                answer: 1,
+                explain: "Los sistemas multiusuario están capacitados para dar servicio a varios usuarios simultáneamente."
+            },
+            {
+                cat: "1. Historia de los Ordenadores",
+                q: "Lenguajes como COBOL, FORTRAN y ALGOL aparecieron principalmente en la:",
+                options: ["1ª Generación", "2ª Generación", "4ª Generación", "5ª Generación"],
+                answer: 1,
+                explain: "Fueron los primeros lenguajes de alto nivel desarrollados en la 2ª Generación durante el uso de transistores."
+            },
+            {
+                cat: "3. Periféricos y Arranque",
+                q: "¿Qué función tiene una pantalla táctil?",
+                options: ["Es solo de entrada", "Es solo de salida", "Es un periférico mixto (Entrada/Salida)", "Es solo memoria de almacenamiento"],
+                answer: 2,
+                explain: "Actúa como salida al mostrar las imágenes y como entrada al captar las pulsaciones táctiles."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿Qué registro de la CPU almacena el indicador de estados o condiciones (por ejemplo si el resultado es cero o negativo)?",
+                options: ["Registro de Banderas o Flags", "CP", "RDM", "RIM"],
+                answer: 0,
+                explain: "El registro de Flags o de Estado almacena condiciones resultantes de la última operación de la UAL."
+            },
+            {
+                cat: "4. El Software del Ordenador",
+                q: "Las aplicaciones para diseño asistido por ordenador (CAD) se clasifican como:",
+                options: ["Software de Sistema", "Software de Aplicación", "Software de Programación", "Sistemas Operativos"],
+                answer: 1,
+                explain: "Pertenecen al software de aplicación profesional para asistir al usuario en tareas técnicas."
+            },
+            {
+                cat: "3. Buses y Memoria",
+                q: "¿Cuál es la capacidad estándar actual de almacenamiento de un disco Blu-Ray de doble capa?",
+                options: ["700 MB", "4.7 GB", "50 GB", "1 TB"],
+                answer: 2,
+                explain: "Un disco Blu-Ray almacena 25 GB en una sola capa y hasta 50 GB en doble capa."
+            },
+            {
+                cat: "2. Arquitectura Von Neumann",
+                q: "¿A través de qué bus el procesador envía la señal para indicar si la operación es de LECTURA o ESCRITURA?",
+                options: ["Bus de Datos", "Bus de Direcciones", "Bus de Control", "Bus USB"],
+                answer: 2,
+                explain: "El Bus de Control transmite órdenes como lectura/escritura en memoria o peticiones de interrupción."
             }
         ];
 
-        // State variables
-        let currentTopic = 'all';
-        let quizQuestions = [];
-        let currentIndex = 0;
-        let score = 0;
-        let quizMode = 'test';
+        // ================= ESTADO Y LÓGICA DE LA APLICACIÓN =================
+        let currentQuestionIndex = 0;
+        let scoreCorrect = 0;
+        let scoreIncorrect = 0;
+        let answeredCurrent = false;
 
-        // DOM elements
-        const topicButtonsContainer = document.getElementById('topicButtons');
-        const questionText = document.getElementById('questionText');
-        const interactiveDiagramBox = document.getElementById('interactiveDiagramBox');
-        const diagramContainer = document.getElementById('diagramContainer');
-        const testOptions = document.getElementById('testOptions');
-        const shortModeBox = document.getElementById('shortModeBox');
-        const shortAnswerInput = document.getElementById('shortAnswerInput');
-        const feedbackBox = document.getElementById('feedbackBox');
-        const feedbackTitle = document.getElementById('feedbackTitle');
-        const explanationText = document.getElementById('explanationText');
-        const topicBadge = document.getElementById('topicBadge');
-        const progressText = document.getElementById('progressText');
-        const scoreVal = document.getElementById('scoreVal');
-        const quizCard = document.getElementById('quizCard');
-        const summaryBox = document.getElementById('summaryBox');
-
+        // Inicialización
         window.onload = function() {
-            renderTopicButtons();
-            selectTopic('all');
+            renderQuestion();
         };
 
-        function renderTopicButtons() {
-            const topics = [
-                { id: 'all', name: '🌐 TODO EL EXAMEN' },
-                { id: 1, name: '1. Sistema y Conceptos' },
-                { id: 2, name: '2. Tipos Comunicación' },
-                { id: 3, name: '3. Señales / Transmisión' },
-                { id: 4, name: '4. Modulación' },
-                { id: 5, name: '5. Multiplexación' },
-                { id: 6, name: '6. Líneas y Titularidad' },
-                { id: 7, name: '7. Redes (LAN/WAN)' },
-                { id: 8, name: '8. Estándares' }
-            ];
+        // Cambiar entre Pestañas (Apuntes / Juego)
+        function switchTab(tab) {
+            const secApuntes = document.getElementById('sec-apuntes');
+            const secJuego = document.getElementById('sec-juego');
+            const btnApuntes = document.getElementById('btn-tab-apuntes');
+            const btnJuego = document.getElementById('btn-tab-juego');
 
-            topicButtonsContainer.innerHTML = '';
-            topics.forEach(t => {
-                const btn = document.createElement('button');
-                const isSelected = currentTopic === t.id;
-                btn.className = `p-2 rounded-xl text-xs font-semibold transition-all border text-left truncate flex items-center justify-between shadow-sm ${
-                    isSelected 
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-md ring-2 ring-blue-400/40' 
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
-                }`;
-                btn.onclick = () => selectTopic(t.id);
-                btn.innerText = t.name;
-                topicButtonsContainer.appendChild(btn);
-            });
-        }
+            if (tab === 'apuntes') {
+                secApuntes.classList.remove('hidden');
+                secJuego.classList.add('hidden');
 
-        function selectTopic(topicId) {
-            currentTopic = topicId;
-            renderTopicButtons();
-
-            if (topicId === 'all') {
-                quizQuestions = [...questionBank];
+                btnApuntes.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm";
+                btnJuego.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
             } else {
-                quizQuestions = questionBank.filter(q => q.topicId === topicId);
-            }
+                secApuntes.classList.add('hidden');
+                secJuego.classList.remove('hidden');
 
-            document.getElementById('topicCountTag').innerText = `${quizQuestions.length} preguntas`;
-
-            currentIndex = 0;
-            score = 0;
-            scoreVal.innerText = score;
-
-            summaryBox.classList.add('hidden');
-            quizCard.classList.remove('hidden');
-
-            loadQuestion();
-        }
-
-        function setQuizMode(mode) {
-            quizMode = mode;
-            const testBtn = document.getElementById('modeTestBtn');
-            const shortBtn = document.getElementById('modeShortBtn');
-            const summaryBtn = document.getElementById('modeSummaryBtn');
-            const studyGuideBox = document.getElementById('studyGuideBox');
-
-            // Reset buttons styling
-            [testBtn, shortBtn, summaryBtn].forEach(btn => {
-                if (btn) btn.className = "flex-1 py-2 px-2 sm:px-3 rounded-xl font-semibold text-xs sm:text-sm transition-all text-slate-700 dark:text-slate-300 hover:bg-slate-300/50 dark:hover:bg-slate-700/50";
-            });
-
-            if (mode === 'test') {
-                testBtn.className = "flex-1 py-2 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-blue-600 text-white shadow-md";
-                testOptions.classList.remove('hidden');
-                shortModeBox.classList.add('hidden');
-                quizCard.classList.remove('hidden');
-                studyGuideBox.classList.add('hidden');
-                summaryBox.classList.add('hidden');
-                loadQuestion();
-            } else if (mode === 'short') {
-                shortBtn.className = "flex-1 py-2 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-blue-600 text-white shadow-md";
-                testOptions.classList.add('hidden');
-                shortModeBox.classList.remove('hidden');
-                quizCard.classList.remove('hidden');
-                studyGuideBox.classList.add('hidden');
-                summaryBox.classList.add('hidden');
-                loadQuestion();
-            } else if (mode === 'summary') {
-                summaryBtn.className = "flex-1 py-2 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-blue-600 text-white shadow-md";
-                quizCard.classList.add('hidden');
-                studyGuideBox.classList.remove('hidden');
-                summaryBox.classList.add('hidden');
+                btnJuego.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm";
+                btnApuntes.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
             }
         }
 
-        function loadQuestion() {
-            if (quizQuestions.length === 0) return;
+        // Conmutar Modo Oscuro
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const iconSun = document.getElementById('theme-icon-sun');
+            const iconMoon = document.getElementById('theme-icon-moon');
 
-            const q = quizQuestions[currentIndex];
-
-            feedbackBox.classList.add('hidden');
-            shortAnswerInput.value = '';
-            document.getElementById('prevBtn').disabled = currentIndex === 0;
-
-            topicBadge.innerText = q.topicName;
-            progressText.innerText = `Pregunta ${currentIndex + 1} de ${quizQuestions.length}`;
-            questionText.innerText = q.question;
-
-            // Render SVG Diagram if present
-            if (q.diagramKey && Diagrams[q.diagramKey]) {
-                diagramContainer.innerHTML = Diagrams[q.diagramKey]();
-                interactiveDiagramBox.classList.remove('hidden');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                iconSun.classList.add('hidden');
+                iconMoon.classList.remove('hidden');
             } else {
-                interactiveDiagramBox.classList.add('hidden');
-                diagramContainer.innerHTML = '';
+                html.classList.add('dark');
+                iconMoon.classList.add('hidden');
+                iconSun.classList.remove('hidden');
             }
+        }
 
-            // Render Multiple Choice Options
-            testOptions.innerHTML = '';
-            q.options.forEach((opt, idx) => {
+        // Mostrar Pregunta Activa
+        function renderQuestion() {
+            answeredCurrent = false;
+            const qData = questions[currentQuestionIndex];
+
+            // UI Progress
+            document.getElementById('quiz-progress-text').innerText = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
+            const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
+
+            // UI Question
+            document.getElementById('question-category').innerText = qData.cat;
+            document.getElementById('question-text').innerText = qData.q;
+
+            // Render Opciones
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            qData.options.forEach((optText, index) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-700/80 bg-slate-50/70 dark:bg-slate-800/60 hover:bg-blue-50 dark:hover:bg-slate-700/80 transition-all text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 flex items-center gap-3 group shadow-sm";
-                btn.onclick = () => checkTestAnswer(idx);
+                btn.className = "w-full text-left p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center space-x-3 transition-all duration-150 focus:outline-none";
+                btn.onclick = () => selectOption(index);
+                btn.id = `opt-${index}`;
+
                 btn.innerHTML = `
-                    <span class="w-7 h-7 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center font-bold text-xs flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        ${String.fromCharCode(65 + idx)}
+                    <span class="w-7 h-7 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold text-xs shrink-0">
+                        ${letters[index]}
                     </span>
-                    <span>${opt}</span>
+                    <span class="text-sm text-gray-800 dark:text-gray-200">${optText}</span>
                 `;
-                testOptions.appendChild(btn);
+                optionsContainer.appendChild(btn);
             });
+
+            // Feedback & Next Button Reset
+            const feedbackBox = document.getElementById('feedback-box');
+            feedbackBox.className = "mt-6 p-4 rounded-xl hidden text-sm";
+            feedbackBox.innerHTML = '';
+
+            const btnNext = document.getElementById('btn-next');
+            btnNext.disabled = true;
+            btnNext.className = "px-6 py-2.5 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-semibold rounded-xl cursor-not-allowed transition-all";
         }
 
-        function checkTestAnswer(selectedIndex) {
-            const q = quizQuestions[currentIndex];
-            const isCorrect = selectedIndex === q.correct;
+        // Selección de Opción
+        function selectOption(indexSelected) {
+            if (answeredCurrent) return;
+            answeredCurrent = true;
 
-            showFeedback(
-                isCorrect,
-                isCorrect ? "¡Respuesta Correcta! 🎉" : "Respuesta Incorrecta ❌",
-                `<b>Opción correcta:</b> ${q.options[q.correct]}<br><br>${q.explanation}`
-            );
+            const qData = questions[currentQuestionIndex];
+            const isCorrect = (indexSelected === qData.answer);
+
+            // Actualizar Puntuación
+            if (isCorrect) {
+                scoreCorrect++;
+                document.getElementById('score-correct').innerText = scoreCorrect;
+            } else {
+                scoreIncorrect++;
+                document.getElementById('score-incorrect').innerText = scoreIncorrect;
+            }
+
+            // Estilar Opciones
+            qData.options.forEach((_, idx) => {
+                const btn = document.getElementById(`opt-${idx}`);
+                btn.disabled = true;
+                btn.classList.remove('hover:bg-gray-50', 'dark:hover:bg-gray-700/50');
+
+                if (idx === qData.answer) {
+                    // Opción Correcta (verde)
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 flex items-center justify-between";
+                } else if (idx === indexSelected && !isCorrect) {
+                    // Opción Errónea seleccionada (rojo)
+                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200 flex items-center justify-between";
+                } else {
+                    // Opciones neutras no elegidas
+                    btn.className += " opacity-50";
+                }
+            });
+
+            // Mostrar Feedback
+            const feedbackBox = document.getElementById('feedback-box');
+            feedbackBox.classList.remove('hidden');
 
             if (isCorrect) {
-                score += 10;
-                scoreVal.innerText = score;
-            }
-        }
-
-        function checkShortAnswer() {
-            const userAns = shortAnswerInput.value.trim().toLowerCase();
-            if (!userAns) return;
-
-            const q = quizQuestions[currentIndex];
-            const matches = q.keywords.some(kw => userAns.includes(kw));
-
-            if (matches) {
-                showFeedback(true, "¡Muy Bien! 👍", `Excelente respuesta.<br><br>${q.explanation}`);
-                score += 10;
-                scoreVal.innerText = score;
+                feedbackBox.className = "mt-6 p-4 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 text-sm";
+                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-circle-check mr-1.5"></i>¡Correcto!</strong> ${qData.explain}`;
             } else {
-                showFeedback(false, "Revisa tu respuesta ⚠️", `<b>Respuesta clave esperada:</b> ${q.options[q.correct]}<br><br><b>Explicación:</b> ${q.explanation}`);
+                feedbackBox.className = "mt-6 p-4 rounded-xl bg-red-100 dark:bg-red-950/60 border border-red-300 dark:border-red-800 text-red-900 dark:text-red-200 text-sm";
+                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-circle-xmark mr-1.5"></i>Incorrecto.</strong> ${qData.explain}`;
             }
+
+            // Habilitar Botón Siguiente
+            const btnNext = document.getElementById('btn-next');
+            btnNext.disabled = false;
+            btnNext.className = "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl cursor-pointer shadow-md transition-all";
         }
 
-        function revealShortAnswer() {
-            const q = quizQuestions[currentIndex];
-            showFeedback(true, "💡 Solución de la Flashcard:", `<b>Respuesta:</b> ${q.options[q.correct]}<br><br><b>Explicación:</b> ${q.explanation}`);
-        }
-
-        function showFeedback(isSuccess, title, descHtml) {
-            feedbackBox.className = `p-4 rounded-2xl mb-6 text-sm transition-all shadow-sm ${
-                isSuccess 
-                ? 'bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-200 dark:border-emerald-800' 
-                : 'bg-rose-100 text-rose-900 border border-rose-300 dark:bg-rose-950/60 dark:text-rose-200 dark:border-rose-800'
-            }`;
-
-            feedbackBox.classList.remove('hidden');
-            feedbackTitle.innerText = title;
-            explanationText.innerHTML = descHtml;
-        }
-
+        // Avanzar a la siguiente pregunta
         function nextQuestion() {
-            if (currentIndex < quizQuestions.length - 1) {
-                currentIndex++;
-                loadQuestion();
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
             } else {
-                finishQuiz();
+                showFinalResults();
             }
         }
 
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                loadQuestion();
+        // Pantalla de Resultados
+        function showFinalResults() {
+            document.getElementById('quiz-card').classList.add('hidden');
+            const resultsCard = document.getElementById('results-card');
+            resultsCard.classList.remove('hidden');
+
+            const total = questions.length;
+            const percentage = Math.round((scoreCorrect / total) * 100);
+
+            document.getElementById('final-score').innerText = `${scoreCorrect} / ${total}`;
+            document.getElementById('final-percentage').innerText = `${percentage}% de aciertos`;
+
+            const feedbackText = document.getElementById('final-feedback-text');
+            if (percentage >= 90) {
+                feedbackText.innerText = "¡Excelente! Dominas perfectamente la Unidad 2. ¡Estás más que preparado para el examen!";
+            } else if (percentage >= 70) {
+                feedbackText.innerText = "¡Muy buen resultado! Tienes claros casi todos los conceptos clave.";
+            } else if (percentage >= 50) {
+                feedbackText.innerText = "Aprobado. Te recomendamos darle una última lectura a los apuntes para asegurar la nota.";
+            } else {
+                feedbackText.innerText = "Necesitas repasar un poco más. Revisa el apartado de apuntes y vuelve a intentar el test.";
             }
         }
 
-        function finishQuiz() {
-            quizCard.classList.add('hidden');
-            summaryBox.classList.remove('hidden');
-            document.getElementById('summaryScoreText').innerText = `Has obtenido un total de ${score} puntos repasando este apartado.`;
-        }
-
+        // Reiniciar Cuestionario
         function restartQuiz() {
-            selectTopic(currentTopic);
-        }
+            currentQuestionIndex = 0;
+            scoreCorrect = 0;
+            scoreIncorrect = 0;
+            document.getElementById('score-correct').innerText = '0';
+            document.getElementById('score-incorrect').innerText = '0';
 
-        function toggleDarkMode() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
-            document.getElementById('themeText').innerText = isDark ? 'Modo Claro' : 'Modo Oscuro';
+            document.getElementById('results-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+
+            renderQuestion();
         }
     </script>
 </body>
