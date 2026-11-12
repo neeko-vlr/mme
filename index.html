@@ -1,496 +1,395 @@
 <!DOCTYPE html>
-<html lang="es" class="light">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repaso Examen - Unidad 2: Funcionamiento del Ordenador</title>
-    <!-- Tailwind CSS -->
+    <title>Repaso SOM: Temas 4 y 5 - Sistemas Operativos</title>
+    <!-- Carga de Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de Tailwind para modo oscuro por clase -->
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0284c7',
-                            600: '#0369a1',
-                            700: '#075985',
-                        }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
-    <!-- Font Awesome Icons -->
+    <!-- Fuente Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Iconos FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        /* Animaciones suaves y utilidades personalizadas */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05);
+        /* Personalización de la barra de desplazamiento */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.2);
-            border-radius: 3px;
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200 flex flex-col">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans min-h-screen flex flex-col">
 
-    <!-- Header Navigation -->
-    <header class="sticky top-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <!-- Barra de Navegación Superior -->
+    <header class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo / Título -->
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 text-white p-2 rounded-lg">
-                    <i class="fa-solid fa-laptop-code text-xl"></i>
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md">
+                    <i class="fa-solid fa-hard-drive text-lg"></i>
                 </div>
-                <h1 class="font-bold text-lg sm:text-xl text-gray-900 dark:text-white">Unidad 2: Funcionamiento del Ordenador</h1>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white leading-none">Repaso SOM</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Temas 4 y 5 • Almacenamiento y Archivos</p>
+                </div>
             </div>
 
+            <!-- Controles de Navegación y Tema -->
             <div class="flex items-center space-x-2 sm:space-x-4">
-                <!-- Tabs navigation -->
-                <nav class="flex bg-gray-100 dark:bg-gray-700 p-1 rounded-xl">
-                    <button id="btn-tab-apuntes" onclick="switchTab('apuntes')" class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm">
+                <nav class="flex bg-slate-100 dark:bg-slate-700/70 p-1 rounded-xl">
+                    <button id="btn-tab-notes" onclick="switchTab('notes')" class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition-all bg-white dark:bg-slate-600 text-indigo-600 dark:text-indigo-300 shadow-sm">
                         <i class="fa-solid fa-book-open mr-1.5"></i>Apuntes
                     </button>
-                    <button id="btn-tab-juego" onclick="switchTab('juego')" class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                        <i class="fa-solid fa-gamepad mr-1.5"></i>Juego Test (50+)
+                    <button id="btn-tab-quiz" onclick="switchTab('quiz')" class="px-3 sm:px-4 py-1.5 rounded-lg text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">
+                        <i class="fa-solid fa-gamepad mr-1.5"></i>Test (50)
                     </button>
                 </nav>
 
-                <!-- Dark Mode Toggle Button -->
-                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" title="Cambiar Tema">
-                    <i id="theme-icon-sun" class="fa-solid fa-sun text-amber-500 hidden"></i>
-                    <i id="theme-icon-moon" class="fa-solid fa-moon text-indigo-500"></i>
+                <!-- Botón Modo Oscuro / Claro -->
+                <button id="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-amber-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all shadow-sm">
+                    <i id="theme-icon" class="fa-solid fa-moon text-lg"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Contenedor Principal -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 sm:px-6 py-8">
 
-        <!-- ================= APUNTES SECTION ================= -->
-        <section id="sec-apuntes" class="space-y-8">
-            <!-- Introducción -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg">
-                <div class="max-w-3xl">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Guía de Repaso Rápido</h2>
-                    <p class="text-blue-100 text-sm sm:text-base mb-4">Todo el temario de la Unidad 2 resumido y estructurado en bloques clave para estudiar antes del examen.</p>
-                    <div class="flex flex-wrap gap-2 text-xs font-semibold">
-                        <span class="bg-white/20 px-3 py-1 rounded-full">1. Historia</span>
-                        <span class="bg-white/20 px-3 py-1 rounded-full">2. Arquitectura Von Neumann</span>
-                        <span class="bg-white/20 px-3 py-1 rounded-full">3. Periféricos y Arranque</span>
-                        <span class="bg-white/20 px-3 py-1 rounded-full">4. Software</span>
-                        <span class="bg-white/20 px-3 py-1 rounded-full">5. Sistemas Operativos</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BLOQUE 1: Historia -->
-            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
-                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
-                    <div class="p-2 bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400 rounded-lg">
-                        <i class="fa-solid fa-clock-rotate-left text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">1. Historia y Evolución de los Ordenadores</h3>
+        <!-- ========================================== -->
+        <!-- SECCIÓN 1: APUNTES DESARROLLADOS           -->
+        <!-- ========================================== -->
+        <section id="section-notes" class="fade-in space-y-8">
+            
+            <!-- TEMA 4 -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700 space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/40 px-3 py-1 rounded-full">Bloque 1</span>
+                    <h3 class="text-2xl font-bold mt-2 text-slate-900 dark:text-white">Tema 4: Introducción a los Sistemas Operativos</h3>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
-                        <h4 class="font-semibold text-amber-600 dark:text-amber-400 text-sm mb-1">Prehistoria</h4>
-                        <p class="text-xs text-gray-600 dark:text-gray-300">
-                            <strong>Ábaco Chino (3500-2000 a.C.):</strong> Servía para representar números en el sistema decimal y realizar operaciones fundamentales mediante cuentas móviles.<br>
-                            <strong>Quipu Andino (1430-1560):</strong> Sistema nemotécnico mediante cuerdas de lana/algodón y nudos usado por los incas como contabilidad y forma de registro.
-                        </p>
-                    </div>
-
-                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
-                        <h4 class="font-semibold text-amber-600 dark:text-amber-400 text-sm mb-1">Era Mecánica (Gen 0)</h4>
-                        <p class="text-xs text-gray-600 dark:text-gray-300">
-                            <strong>Pascalina (1642):</strong> Ruedas dentadas para sumar y restar.<br>
-                            <strong>Máquina de Leibniz (1671):</strong> Suma, resta, multiplica y divide.<br>
-                            <strong>Máquinas de Babbage (1822/1837):</strong> Diferencial (ecuaciones) y Analítica (conceptos de entrada, salida, memoria, UC y UAL).<br>
-                            <strong>Herman Hollerith (1890):</strong> Máquina tabuladora con tarjetas perforadas para el censo de EE.UU. Funda CTR (posteriormente IBM en 1924).<br>
-                            <strong>MARK I (1944):</strong> Calculadora electromecánica de Howard H. Aiken (17m de largo, 70 toneladas).
-                        </p>
-                    </div>
-
-                    <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-100 dark:border-gray-600">
-                        <h4 class="font-semibold text-amber-600 dark:text-amber-400 text-sm mb-1">Era Electrónica</h4>
-                        <p class="text-xs text-gray-600 dark:text-gray-300">
-                            Reemplazo de los componentes mecánicos por componentes electrónicos activos: válvulas de vacío, transistores y microchips de silicio integrados.
-                        </p>
-                    </div>
+                <!-- Apartado 1 -->
+                <div class="space-y-3">
+                    <h4 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 flex items-center justify-center mr-2 text-sm">1</span>
+                        Unidades de almacenamiento
+                    </h4>
+                    <ul class="space-y-2 text-slate-700 dark:text-slate-300 leading-relaxed pl-2">
+                        <li><strong class="text-slate-900 dark:text-white">• Unidad física:</strong> Es el dispositivo de hardware real que utilizamos para guardar información y programas (por ejemplo: un disco duro HDD, un CD-ROM o una disquetera FDD).</li>
+                        <li><strong class="text-slate-900 dark:text-white">• Unidad lógica:</strong> Es la representación virtual que hace el sistema operativo de cada una de esas unidades físicas para poder gestionarlas.</li>
+                        <li><strong class="text-slate-900 dark:text-white">• Asignación de letras (en Windows/DOS):</strong>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-2">
+                                <div class="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                                    <span class="font-bold text-indigo-600 dark:text-indigo-400 block">A: y B:</span>
+                                    <span class="text-sm">Reservadas históricamente para la primera y segunda unidad de disquete.</span>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                                    <span class="font-bold text-indigo-600 dark:text-indigo-400 block">C: y D:</span>
+                                    <span class="text-sm">C: para el disco duro principal. D: para el 2º disco duro, partición o lector CD-ROM.</span>
+                                </div>
+                                <div class="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-slate-200 dark:border-slate-600">
+                                    <span class="font-bold text-indigo-600 dark:text-indigo-400 block">E: en adelante</span>
+                                    <span class="text-sm">Para siguientes discos duros, unidades ópticas o particiones adicionales.</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Tabla Generaciones -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left text-gray-600 dark:text-gray-300 border-collapse">
-                        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                            <tr>
-                                <th class="p-2 border border-gray-200 dark:border-gray-600">Gen.</th>
-                                <th class="p-2 border border-gray-200 dark:border-gray-600">Periodo</th>
-                                <th class="p-2 border border-gray-200 dark:border-gray-600">Tecnología Clave</th>
-                                <th class="p-2 border border-gray-200 dark:border-gray-600">Características y Modelos Clave</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">1ª</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">1946-1955</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Válvulas de vacío</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">ENIAC (Eckert y Mauchly), EDVAC (programa almacenado), UNIVAC-I (primer ordenador comercial con cintas magnéticas), MANIAC I. Lenguaje máquina puro.</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">2ª</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">1955-1964</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Transistores</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Sustitución de válvulas por transistores (menor tamaño y mayor fiabilidad/rapidez). IBM 1401, CDC 6600. Nacen lenguajes de alto nivel (COBOL, FORTRAN, ALGOL). Primeros discos duros con núcleos de ferrita.</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">3ª</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">1964-1974</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Circuitos Integrados (SSI/MSI)</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Encapsulación de múltiples componentes en una sola pieza. IBM 370, PDP-8, PDP-11. Desarrollo significativo del software y sistemas operativos de tiempo compartido. Lenguajes BASIC y Pascal.</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">4ª</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">1974-1983</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Microprocesador (LSI/VLSI)</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Intel 4004 integra toda la CPU en un solo circuito. Nacen los ordenadores personales (PC). Perfeccionamiento de memorias secundarias y aparición de memoria virtual. Fujitsu M382, Cray X-MP.</td>
-                            </tr>
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30">
-                                <td class="p-2 border border-gray-200 dark:border-gray-600 font-bold">5ª</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">1983-Act.</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">VLSI / Inteligencia Artificial</td>
-                                <td class="p-2 border border-gray-200 dark:border-gray-600">Proyecto de 5ª Generación (Japón). Arquitecturas paralelas de gran velocidad, comunicación mediante lenguaje natural cotidiano, supercomputadores (Altamira, Picasso, Pentium, Alpha).</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </article>
-
-            <!-- BLOQUE 2: Arquitectura Von Neumann -->
-            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
-                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
-                    <div class="p-2 bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400 rounded-lg">
-                        <i class="fa-solid fa-microchip text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">2. Arquitectura Von Neumann y Componentes de la CPU</h3>
-                </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    John von Neumann formuló el modelo donde las unidades del ordenador están conectadas permanentemente bajo un control central, introduciendo la idea fundamental del <strong>programa almacenado</strong>: las instrucciones del programa y los datos conviven en la misma memoria principal.
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- CPU -->
-                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
-                        <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm"><i class="fa-solid fa-brain mr-1.5"></i>UCP / CPU (Unidad Central de Proceso)</h4>
-                        <p class="text-xs text-gray-600 dark:text-gray-300">Es el cerebro de la máquina que gobierna el sistema. Se divide internamente en:</p>
-                        <ul class="text-xs space-y-2 text-gray-600 dark:text-gray-300">
-                            <li><strong>Unidad de Control (UC):</strong> Gobierna todo el sistema. Interpreta instrucciones de la RAM y envía señales de control.
-                                <br><em>- CP (Contador de Programa):</em> Contiene la dirección de la siguiente instrucción.
-                                <br><em>- RI (Registro de Instrucción):</em> Retiene la instrucción actual.
-                                <br><em>- DI (Descodificador):</em> Analiza el código de operación del RI.
-                                <br><em>- Reloj:</em> Genera impulsos síncronos en gigahercios (GHz) coordinando los tiempos de ciclo.
-                                <br><em>- Secuenciador:</em> Emite microórdenes síncronas.
-                            </li>
-                            <li><strong>Unidad Aritmético-Lógica (UAL / ALU):</strong> Aplica operaciones aritméticas y lógica booleana (verdadero/falso).
-                                <br><em>- FPU (Unidad de Coma Flotante):</em> Coprocesador especializado en números fraccionarios, potencias, trigonometría y logaritmos.
-                                <br><em>- Registro Acumulador:</em> Deposita los resultados inmediatos de la UAL.
-                            </li>
-                            <li><strong>Registros Internos:</strong> Celdas de memoria de alta velocidad dentro del microchip (múltiplos de 8 bits: 16, 32, 64 bits).</li>
-                        </ul>
-                    </div>
-
-                    <!-- Buses y Jerarquía -->
-                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-3">
-                        <div>
-                            <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm mb-1"><i class="fa-solid fa-bus mr-1.5"></i>Buses de Comunicación</h4>
-                            <p class="text-xs text-gray-600 dark:text-gray-300 mb-1">Líneas físicas u ópticas en paralelo para transmitir bits:</p>
-                            <ul class="text-xs space-y-1 text-gray-600 dark:text-gray-300">
-                                <li><strong>Bus de Datos:</strong> Intercambio bidireccional de datos e instrucciones entre la CPU y demás componentes (64 bits permiten 8 bytes por ciclo).</li>
-                                <li><strong>Bus de Direcciones:</strong> La CPU especifica qué celda de memoria o dispositivo E/S quiere acceder. $n$ bits permiten direccionamiento directo de $2^n$ casillas.</li>
-                                <li><strong>Bus de Control:</strong> Transporta impulsos de mando y lectura/escritura generados por la UC.</li>
+                <!-- Apartado 2 -->
+                <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700/70">
+                    <h4 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 flex items-center justify-center mr-2 text-sm">2</span>
+                        Organización y Estructura del Disco Duro
+                    </h4>
+                    <p class="text-slate-700 dark:text-slate-300">Un disco (HDD, FDD) es un soporte electromecánico de almacenamiento <strong>no volátil</strong> (no pierde datos al apagarlo) que posee dos estructuras:</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        <!-- Estructura Física -->
+                        <div class="bg-amber-50/70 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/40 p-4 rounded-xl space-y-2">
+                            <h5 class="font-bold text-amber-800 dark:text-amber-300 flex items-center">
+                                <i class="fa-solid fa-microchip mr-2"></i>Estructura Física (De fábrica)
+                            </h5>
+                            <p class="text-xs text-amber-700 dark:text-amber-400">Viene definida en el proceso de fabricación:</p>
+                            <ul class="text-sm space-y-1.5 text-slate-700 dark:text-slate-300">
+                                <li><strong>• Caras (Heads):</strong> Cada uno de los dos lados de un plato del disco.</li>
+                                <li><strong>• Pistas (Tracks):</strong> Círculos concéntricos en los que se divide cada cara. Su número determina la capacidad.</li>
+                                <li><strong>• Cilindros:</strong> Conjunto de pistas con el mismo número en todos los platos apilados (se usa más este término que pista).</li>
+                                <li><strong>• Sectores:</strong> Cada una de las divisiones o "porciones" en las que se corta una pista.</li>
+                                <li><strong>• Peine y Cabezas:</strong> Brazo mecánico que mueve las cabezas de lectura/escritura sobre las caras.</li>
                             </ul>
                         </div>
 
-                        <div class="border-t border-gray-200 dark:border-gray-600 pt-2">
-                            <h4 class="font-bold text-purple-600 dark:text-purple-400 text-sm mb-1"><i class="fa-solid fa-layer-group mr-1.5"></i>Jerarquía de Memorias</h4>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">
-                                <em>Organización por capacidad, velocidad y coste por bit:</em><br>
-                                <strong>Nivel 0: Registros CPU</strong> (8-128 bits, acceso &lt; 1 ns)<br>
-                                <strong>Nivel 1: Memoria Caché</strong> (10 KB - 512 MB, acceso &lt; 5 ns, tampón ultra rápido)<br>
-                                <strong>Nivel 2: Memoria RAM Principal</strong> (10 MB - 10 GB+, acceso &le; 15 ns, volátil)<br>
-                                <strong>Nivel 3: Secundaria / Disco Duro</strong> (GBs a TBs, acceso &lt; 10 ms)<br>
-                                <strong>Nivel 4: Auxiliar / Extraíble</strong> (Acceso de 100 ms a minutos)
-                            </p>
+                        <!-- Estructura Lógica -->
+                        <div class="bg-emerald-50/70 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-800/40 p-4 rounded-xl space-y-2">
+                            <h5 class="font-bold text-emerald-800 dark:text-emerald-300 flex items-center">
+                                <i class="fa-solid fa-sitemap mr-2"></i>Estructura Lógica (Al formatear)
+                            </h5>
+                            <p class="text-xs text-emerald-700 dark:text-emerald-400">La crea el usuario cuando da formato al disco:</p>
+                            <ul class="text-sm space-y-1.5 text-slate-700 dark:text-slate-300">
+                                <li><strong>• Cluster (unidad de asignación):</strong> Conjunto contiguo de sectores. Es la <u>unidad mínima</u> de almacenamiento que se lee o escribe.</li>
+                                <li><strong>• Sector de arranque (Boot):</strong> Situado en el <strong>sector 0</strong>. Contiene el cargador del SO y la tabla <strong>BPB</strong> (parámetros físicos).</li>
+                                <li><strong>• Tabla FAT:</strong> Es el "índice" del disco; indica al SO en qué clústeres está guardado cada archivo.</li>
+                                <li><strong>• Directorio raíz:</strong> Primera carpeta de la jerarquía (<code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">C:\</code> o <code class="bg-slate-200 dark:bg-slate-700 px-1 rounded">/</code>). Tiene tamaño fijo y guarda metadatos (nombre, tamaño, fecha...).</li>
+                                <li><strong>• Área de datos:</strong> Zona más grande del disco donde se guardan los archivos y subcarpetas.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
 
-                <!-- Detalle ciclo de instrucción -->
-                <div class="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-xl border border-blue-100 dark:border-blue-900/50 text-xs space-y-1">
-                    <h4 class="font-bold text-blue-800 dark:text-blue-300">Ciclo Completo de Ejecución de una Instrucción paso a paso:</h4>
-                    <ol class="list-decimal list-inside text-blue-900 dark:text-blue-200 leading-relaxed space-y-0.5">
-                        <li>El <strong>CP</strong> tiene la dirección de la siguiente instrucción. Se copia en el <strong>RDM</strong> (Registro Dirección Memoria).</li>
-                        <li>El contenido de esa dirección en la RAM pasa al <strong>RIM</strong> (Registro Intercambio Memoria) y de ahí al <strong>RI</strong> (Registro Instrucción).</li>
-                        <li>El <strong>Descodificador (DI)</strong> analiza el código de operación.</li>
-                        <li>La UC solicita la lectura de los operandos necesarios desde la RAM al RIM.</li>
-                        <li>La <strong>UAL</strong> ejecuta la operación e ingresa el resultado en el <strong>Registro Acumulador</strong>.</li>
-                        <li>El <strong>CP</strong> se incrementa en +1 para apuntar a la instrucción posterior.</li>
-                    </ol>
-                </div>
-            </article>
-
-            <!-- BLOQUE 3: Periféricos y Arranque -->
-            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
-                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
-                    <div class="p-2 bg-emerald-100 text-emerald-600 dark:bg-emerald-900/50 dark:text-emerald-400 rounded-lg">
-                        <i class="fa-solid fa-plug text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">3. Periféricos y Proceso de Arranque del Ordenador</h3>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="space-y-2">
-                        <h4 class="font-bold text-gray-800 dark:text-gray-200">Tipos de Periféricos (Entrada / Salida / Mixtos):</h4>
-                        <ul class="space-y-1.5 text-gray-600 dark:text-gray-300">
-                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Entrada:</span> Introducen datos externos a la CPU para su tratamiento. <em>Ejemplos:</em> Teclado, ratón, cámara web, escáner, micrófono, lector de código de barras, joystick, pantalla táctil.</li>
-                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Salida:</span> Reciben datos procesados por la CPU y los reproducen comprensibles para el usuario. <em>Ejemplos:</em> Monitor, impresora, altavoces, auriculares, fax.</li>
-                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Almacenamiento:</span> Guardan datos permanentemente. <em>Magnéticos:</em> Discos duros (HDD). <em>Ópticos:</em> CD (700 MB), DVD (4.7-8.5 GB), Blu-Ray (25-50 GB). <em>Sólidos:</em> Memorias Flash, pendrives.</li>
-                            <li><span class="font-semibold text-emerald-600 dark:text-emerald-400">Comunicación:</span> Facilitan la interacción entre dos o más ordenadores. <em>Ejemplos:</em> Tarjeta de red, módem, tarjetas Wi-Fi / Bluetooth, switches/HUB, puertos serie/paralelo.</li>
-                        </ul>
-                    </div>
-
-                    <div class="bg-gray-50 dark:bg-gray-700/50 p-3.5 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
-                        <h4 class="font-bold text-gray-800 dark:text-gray-200">Secuencia Detallada de Arranque (Booting):</h4>
-                        <ol class="list-decimal list-inside space-y-1 text-gray-600 dark:text-gray-300">
-                            <li><strong>Encendido eléctrico:</strong> La fuente de alimentación distribuye energía a la CPU y placa base.</li>
-                            <li><strong>Acceso a la ROM:</strong> La CPU ejecuta el código del chip de memoria <strong>ROM BIOS</strong> (Basic Input/Output System).</li>
-                            <li><strong>Ejecución del POST:</strong> El programa <em>POST (Power On Self Test)</em> realiza una autocomprobación diagnóstica de los componentes de hardware (RAM, teclado, GPU, discos).</li>
-                            <li><strong>Carga del SO:</strong> Si el POST no encuentra fallos, la BIOS busca un disco de sistema con sector de arranque.</li>
-                            <li><strong>Transferencia a la RAM:</strong> Los archivos fundamentales del Sistema Operativo se cargan en la RAM y el SO toma el control total del equipo.</li>
-                        </ol>
-                    </div>
-                </div>
-            </article>
-
-            <!-- BLOQUE 4: El Software del Ordenador (SEPARADO) -->
-            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
-                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
-                    <div class="p-2 bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 rounded-lg">
-                        <i class="fa-solid fa-code text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">4. El Software del Ordenador</h3>
-                </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Según el estándar IEEE 729, el <strong>Software</strong> es el conjunto de programas de cómputo, procedimientos, reglas, documentación y datos asociados que forman parte de las operaciones de un sistema de computación. Es el componente lógico intangible del ordenador.
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-                    <!-- Clasificación por tipo de trabajo -->
-                    <div class="space-y-3">
-                        <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm"><i class="fa-solid fa-briefcase mr-1.5"></i>1. Basado en el tipo de trabajo que realiza</h4>
-                        
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">A. Software de Sistema:</strong>
-                            <p class="text-gray-600 dark:text-gray-300">Permite que el hardware funcione y sirve de interfaz entre el usuario y los recursos físicos. Incluye Sistemas Operativos, controladores de dispositivo (drivers), utilidades de diagnóstico, corrección y optimización.</p>
+                <!-- Apartado 3 -->
+                <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700/70">
+                    <h4 class="text-lg font-bold text-indigo-600 dark:text-indigo-400 flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 flex items-center justify-center mr-2 text-sm">3</span>
+                        Particiones de disco
+                    </h4>
+                    <p class="text-slate-700 dark:text-slate-300">Consiste en dividir el disco en partes asignando tamaño y estructura a cada una para que el SO pueda trabajar. Hay <strong>3 tipos</strong>:</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-600">
+                            <span class="font-bold text-slate-900 dark:text-white block mb-1">1. Primaria</span>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Máximo <strong>4 por disco</strong>. Es donde se instala habitualmente el Sistema Operativo.</p>
                         </div>
-
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">B. Software de Aplicación:</strong>
-                            <p class="text-gray-600 dark:text-gray-300">Programas diseñados para ayudar al usuario a llevar a cabo tareas específicas automatizadas. <em>Ejemplos:</em> Suites ofimáticas (Word, Excel), gestión industrial, software médico, educativo, diseño asistido por ordenador (CAD).</p>
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-600">
+                            <span class="font-bold text-slate-900 dark:text-white block mb-1">2. Extendida</span>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Máximo <strong>1 por disco</strong>. Sirve como contenedor para meter dentro particiones lógicas.</p>
                         </div>
-
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">C. Software de Programación / Desarrollo:</strong>
-                            <p class="text-gray-600 dark:text-gray-300">Herramientas utilizadas por los desarrolladores para escribir y crear nuevos programas. Destacan los Entornos de Desarrollo Integrados (IDE), editores de código, compiladores, intérpretes y depuradores.</p>
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-700/40 border border-slate-200 dark:border-slate-600">
+                            <span class="font-bold text-slate-900 dark:text-white block mb-1">3. Lógica</span>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Ocupa una parte o toda la partición extendida. Permite tener muchas divisiones extra.</p>
                         </div>
                     </div>
+                    <div class="bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 p-3.5 rounded-r-xl text-sm text-slate-700 dark:text-slate-300">
+                        <strong>💡 Importante (Partición Activa y Arranque):</strong> Solo puede haber <strong>una partición activa</strong> en el disco (la primera que se lee al encender el PC). Para elegir qué SO arrancar si tenemos varios instalados, se usan <strong>gestores de arranque</strong> como <em>bootmgr, boot.ini, GRUB, LILO, GAC o BootMagic</em>.
+                    </div>
+                </div>
+            </div>
 
-                    <!-- Clasificación por método de distribución -->
-                    <div class="space-y-3">
-                        <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm"><i class="fa-solid fa-box-open mr-1.5"></i>2. Basado en el método de distribución</h4>
-                        
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">Shareware:</strong>
-                            <p class="text-gray-600 dark:text-gray-300">Modalidad de distribución evaluativa. Permite probar el producto de forma gratuita por un tiempo o uso determinado. Transcurrido ese plazo, requiere de un pago para obtener la licencia completa. <em>Ejemplos:</em> WinZip, WinRAR, Paint Shop Pro.</p>
+            <!-- TEMA 5 -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700 space-y-6">
+                <div class="border-b border-slate-200 dark:border-slate-700 pb-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/40 px-3 py-1 rounded-full">Bloque 2</span>
+                    <h3 class="text-2xl font-bold mt-2 text-slate-900 dark:text-white">Tema 5 (Continuación): El Sistema de Archivos</h3>
+                </div>
+
+                <!-- Apartado 1 -->
+                <div class="space-y-2">
+                    <h4 class="text-lg font-bold text-purple-600 dark:text-purple-400 flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center mr-2 text-sm">1</span>
+                        Concepto de Sistema de Archivos (File System)
+                    </h4>
+                    <ul class="space-y-2 text-slate-700 dark:text-slate-300 pl-2">
+                        <li>• Estructura y organiza la información guardada en una unidad, controlando qué sectores están libres u ocupados.</li>
+                        <li>• Se define durante el <strong>formateo</strong> del disco.</li>
+                        <li>• <strong>Compatibilidad:</strong> Normalmente <u>no son compatibles entre sí</u> (ej. desde Windows con NTFS no puedes leer nativamente un disco Linux con EXT2, aunque Linux/UNIX sí suele poder leer FAT).</li>
+                    </ul>
+                </div>
+
+                <!-- Apartado 2 -->
+                <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700/70">
+                    <h4 class="text-lg font-bold text-purple-600 dark:text-purple-400 flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center mr-2 text-sm">2</span>
+                        Características, Extensiones y Atributos de Archivos
+                    </h4>
+                    <ul class="space-y-2 text-slate-700 dark:text-slate-300 pl-2">
+                        <li><strong class="text-slate-900 dark:text-white">• Longitud de nombres:</strong> En <strong>DOS</strong> máximo 8 caracteres; en <strong>Windows</strong> hasta 256 caracteres.</li>
+                        <li><strong class="text-slate-900 dark:text-white">• Mayúsculas/Minúsculas:</strong> <strong>UNIX/Linux</strong> sí diferencia entre mayúsculas y minúsculas; <strong>Windows/DOS</strong> no.</li>
+                        <li><strong class="text-slate-900 dark:text-white">• Extensiones comunes:</strong> Indican el tipo de archivo y con qué programa abrirlo:
+                            <div class="flex flex-wrap gap-1.5 mt-2 text-xs">
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.EXE / .COM</strong> (Ejecutable)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.BAT</strong> (Proceso por lotes DOS)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.DLL</strong> (Librería dinámica)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.DRV</strong> (Driver hardware)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.SCR</strong> (Salvapantallas)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.LNK</strong> (Acceso directo)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.INI</strong> (Configuración)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.CAB / .ZIP / .RAR</strong> (Comprimido)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.OBJ</strong> (Código objeto C)</span>
+                                <span class="px-2.5 py-1 rounded-md bg-slate-100 dark:bg-slate-700 font-mono"><strong>.TMP</strong> (Temporal)</span>
+                            </div>
+                        </li>
+                        <li><strong class="text-slate-900 dark:text-white">• Atributos principales de los archivos:</strong>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-2 text-sm">
+                                <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
+                                    <strong class="block text-purple-600 dark:text-purple-400">Sólo lectura</strong>
+                                    Se puede leer, pero no modificar.
+                                </div>
+                                <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
+                                    <strong class="block text-purple-600 dark:text-purple-400">Oculto</strong>
+                                    No se muestra visiblemente.
+                                </div>
+                                <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
+                                    <strong class="block text-purple-600 dark:text-purple-400">Archivo</strong>
+                                    Indica que ha sido modificado.
+                                </div>
+                                <div class="p-2.5 rounded-lg bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600">
+                                    <strong class="block text-purple-600 dark:text-purple-400">Sistema</strong>
+                                    Pertenece al SO (no al usuario).
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Apartado 3 -->
+                <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-700/70">
+                    <h4 class="text-lg font-bold text-purple-600 dark:text-purple-400 flex items-center">
+                        <span class="w-7 h-7 rounded-lg bg-purple-100 dark:bg-purple-900/60 flex items-center justify-center mr-2 text-sm">3</span>
+                        Clasificación de los Sistemas de Archivos
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800/40">
+                            <h5 class="font-bold text-blue-800 dark:text-blue-300 mb-1"><i class="fa-solid fa-compact-disc mr-1.5"></i>De Disco</h5>
+                            <ul class="text-sm space-y-1 text-slate-700 dark:text-slate-300">
+                                <li><strong>Microsoft:</strong> FAT16, FAT32, NTFS (más rápido y seguro que FAT).</li>
+                                <li><strong>Linux / UNIX:</strong> ext2, ext3, ext4, UNIX S5.</li>
+                            </ul>
                         </div>
-
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">Freeware:</strong>
-                            <p class="text-gray-600 dark:text-gray-300">Software distribuido sin coste alguno. Puede incluir restricciones en su licencia (no modificar la app, no venderla, dar crédito al autor). No debe confundirse siempre con el Software Libre.</p>
+                        <div class="p-4 rounded-xl bg-teal-50/60 dark:bg-teal-900/10 border border-teal-200 dark:border-teal-800/40">
+                            <h5 class="font-bold text-teal-800 dark:text-teal-300 mb-1"><i class="fa-solid fa-network-wired mr-1.5"></i>De Red</h5>
+                            <ul class="text-sm space-y-1 text-slate-700 dark:text-slate-300">
+                                <li><strong>SMB:</strong> Samba.</li>
+                                <li><strong>NSS:</strong> Novell NetWare.</li>
+                            </ul>
                         </div>
-
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">Software Libre (4 Libertades GNU):</strong>
-                            <p class="text-gray-600 dark:text-gray-300">Ofrece total libertad a los usuarios para: 1) Ejecutar el programa para cualquier fin. 2) Estudiar el código fuente y adaptarlo. 3) Distribuir copias. 4) Mejorarlo y publicar las mejoras para la comunidad.</p>
-                        </div>
-
-                        <div class="bg-gray-50 dark:bg-gray-700/40 p-3 rounded-lg border border-gray-100 dark:border-gray-700 space-y-1">
-                            <strong class="text-gray-900 dark:text-white">Software Multimedia y de Uso Específico:</strong>
-                            <p class="text-gray-600 dark:text-gray-300"><strong>Multimedia:</strong> Integra texto, gráficos, audio y animaciones (enciclopedias interactiva).<br><strong>Uso específico:</strong> Desarrollado a medida para resolver una necesidad particular de un cliente/empresa (gestión de videoclubs, notas de escuelas, bancos).</p>
+                        <div class="p-4 rounded-xl bg-rose-50/60 dark:bg-rose-900/10 border border-rose-200 dark:border-rose-800/40">
+                            <h5 class="font-bold text-rose-800 dark:text-rose-300 mb-1"><i class="fa-solid fa-layer-group mr-1.5"></i>Propósito General</h5>
+                            <ul class="text-sm space-y-1 text-slate-700 dark:text-slate-300">
+                                <li><strong>CDFS:</strong> Para unidades CD-ROM.</li>
+                                <li><strong>SWAP:</strong> Memoria de intercambio en Linux.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </article>
+            </div>
 
-            <!-- BLOQUE 5: El Sistema Operativo (SEPARADO) -->
-            <article class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm space-y-4">
-                <div class="flex items-center space-x-3 border-b border-gray-100 dark:border-gray-700 pb-3">
-                    <div class="p-2 bg-purple-100 text-purple-600 dark:bg-purple-900/50 dark:text-purple-400 rounded-lg">
-                        <i class="fa-solid fa-sliders text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">5. El Sistema Operativo (SO)</h3>
-                </div>
-
-                <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                    Es el programa o conjunto de programas primordiales que controlan y gestionan el funcionamiento del hardware, abstrayendo al usuario de la complejidad de la máquina y coordinando jerárquicamente todos los procesos y periféricos.
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <!-- Componentes -->
-                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
-                        <h4 class="font-bold text-purple-600 dark:text-purple-400 text-sm"><i class="fa-solid fa-cubes mr-1.5"></i>Componentes Básicos</h4>
-                        <ul class="space-y-1.5 text-gray-600 dark:text-gray-300">
-                            <li><strong>Núcleo (Kernel):</strong> Funciones fundamentales. Programa de arranque, planificador de tareas/procesos de la CPU, administración de memoria, periféricos e interrupciones.</li>
-                            <li><strong>Intérprete de Comandos (Shell):</strong> Interfaz entre usuario y Kernel. Traduce órdenes (gráficas GUI o comandos de consola CLI) en llamadas al sistema.</li>
-                            <li><strong>Sistema de Archivos:</strong> Organiza la información en estructuras arbóreas de carpetas y ficheros.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Funciones -->
-                    <div class="bg-gray-50 dark:bg-gray-700/40 p-4 rounded-xl border border-gray-100 dark:border-gray-600 space-y-2">
-                        <h4 class="font-bold text-purple-600 dark:text-purple-400 text-sm"><i class="fa-solid fa-list-check mr-1.5"></i>Funciones Principales</h4>
-                        <ul class="space-y-1 text-gray-600 dark:text-gray-300">
-                            <li>• Proporcionar una interfaz accesible (GUI/CLI).</li>
-                            <li>• Reconocer e interactuar con componentes mediante <em>drivers</em>.</li>
-                            <li>• Administrar permisos y accesos de archivos.</li>
-                            <li>• Controlar las interrupciones para dar prioridad a tareas.</li>
-                            <li>• Gestionar la memoria RAM y crear <strong>Memoria Virtual</strong> en el disco duro si la física no es suficiente.</li>
-                            <li>• Contabilizar y repartir de forma equitativa el uso de recursos entre aplicaciones evitando conflictos.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Clasificación del SO -->
-                    <div class="bg-purple-50 dark:bg-purple-950/30 p-4 rounded-xl border border-purple-100 dark:border-purple-900/40 space-y-2">
-                        <h4 class="font-bold text-purple-800 dark:text-purple-300 text-sm"><i class="fa-solid fa-diagram-project mr-1.5"></i>Clasificación de los SO</h4>
-                        <ul class="space-y-1.5 text-gray-700 dark:text-gray-300">
-                            <li><strong>Por Tareas:</strong>
-                                <br><em>- Monotarea:</em> Solo una tarea a la vez (ej. MS-DOS).
-                                <br><em>- Multitarea:</em> Varios procesos concurrentes (ej. Windows, macOS).
-                            </li>
-                            <li><strong>Por Usuarios:</strong>
-                                <br><em>- Monousuario:</em> Atiende a un solo usuario (ej. MS-DOS, Windows 11 doméstico).
-                                <br><em>- Multiusuario:</em> Soporta múltiples usuarios compartiendo recursos en red (ej. Linux, UNIX).
-                            </li>
-                            <li><strong>Por Procesadores:</strong>
-                                <br><em>- Uniproceso:</em> Maneja un solo procesador.
-                                <br><em>- Multiproceso:</em> Distribuye la carga entre varios procesadores (ej. Solaris, SCO Unix).
-                            </li>
-                            <li><strong>Por Acceso a Servicios:</strong>
-                                <br><em>- De Red:</em> Conectan máquinas requiriendo conocer sintaxis y ubicación de recursos (ej. Netware, Windows Server).
-                                <br><em>- Distribuidos:</em> Los usuarios acceden a recursos de múltiples máquinas como si fuesen un servicio local único sin saber su ubicación.
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </article>
+            <!-- Botón CTA al final de los apuntes -->
+            <div class="text-center pt-2">
+                <button onclick="switchTab('quiz')" class="inline-flex items-center px-6 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/30 transition-all transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-play mr-2"></i> ¡Listo! Empezar el Test de 50 Preguntas
+                </button>
+            </div>
         </section>
 
-        <!-- ================= JUEGO INTERACTIVO SECTION ================= -->
-        <section id="sec-juego" class="hidden max-w-4xl mx-auto space-y-6">
-
-            <!-- Card de Progreso & Stats -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="w-full sm:w-auto">
-                    <span class="text-xs font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">Progreso del Test</span>
-                    <h3 id="quiz-progress-text" class="text-lg font-bold text-gray-900 dark:text-white">Pregunta 1 de 52</h3>
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 h-2.5 rounded-full mt-2 overflow-hidden w-48">
-                        <div id="quiz-progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 2%"></div>
+        <!-- ========================================== -->
+        <!-- SECCIÓN 2: JUEGO INTERACTIVO (50 PREGUNTAS)-->
+        <!-- ========================================== -->
+        <section id="section-quiz" class="hidden fade-in">
+            
+            <!-- Panel Superior de Estadísticas y Controles -->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-700 mb-6">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div>
+                        <span id="question-counter" class="text-sm font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Pregunta 1 de 50</span>
+                        <div class="flex items-center space-x-3 mt-1 text-sm">
+                            <span class="text-emerald-600 dark:text-emerald-400 font-semibold"><i class="fa-solid fa-check-circle mr-1"></i>Aciertos: <span id="score-correct">0</span></span>
+                            <span class="text-rose-600 dark:text-rose-400 font-semibold"><i class="fa-solid fa-times-circle mr-1"></i>Fallos: <span id="score-wrong">0</span></span>
+                            <span class="text-amber-600 dark:text-amber-400 font-semibold"><i class="fa-solid fa-fire mr-1"></i>Racha: <span id="score-streak">0</span></span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="shuffleAndRestart()" class="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-xs sm:text-sm font-semibold transition-colors" title="Mezclar preguntas y reiniciar">
+                            <i class="fa-solid fa-shuffle mr-1"></i>Mezclar / Reiniciar
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-6">
-                    <div class="text-center">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 block">Aciertos</span>
-                        <span id="score-correct" class="text-xl font-extrabold text-emerald-500">0</span>
-                    </div>
-                    <div class="text-center">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 block">Fallos</span>
-                        <span id="score-incorrect" class="text-xl font-extrabold text-red-500">0</span>
-                    </div>
-                    <button onclick="restartQuiz()" class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors" title="Reiniciar Cuestionario">
-                        <i class="fa-solid fa-rotate-right mr-1"></i>Reiniciar
-                    </button>
+                <!-- Barra de Progreso -->
+                <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                    <div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 2%"></div>
                 </div>
             </div>
 
-            <!-- Card de Pregunta activa -->
-            <div id="quiz-card" class="bg-white dark:bg-gray-800 rounded-2xl p-6 sm:p-8 border border-gray-200 dark:border-gray-700 shadow-md transition-all duration-300">
-                <div class="mb-6">
-                    <span id="question-category" class="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/40 dark:text-blue-300 rounded-full mb-3">
-                        Categoría
-                    </span>
-                    <h2 id="question-text" class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-snug">
-                        ¿Cargando pregunta...?
-                    </h2>
+            <!-- Tarjeta de Pregunta -->
+            <div id="quiz-card" class="bg-white dark:bg-slate-800 rounded-2xl p-6 sm:p-8 shadow-md border border-slate-200 dark:border-slate-700">
+                <div class="mb-2">
+                    <span id="question-topic" class="inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Tema 4</span>
                 </div>
+                <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-6 leading-snug">
+                    Cargando pregunta...
+                </h3>
 
-                <!-- Opciones -->
+                <!-- Contenedor de Opciones -->
                 <div id="options-container" class="space-y-3">
-                    <!-- Dinámico con JS -->
+                    <!-- Las 4 opciones se inyectan con JS -->
                 </div>
 
-                <!-- Explicación/Feedback tras responder -->
-                <div id="feedback-box" class="mt-6 p-4 rounded-xl hidden text-sm">
-                    <!-- Dinámico con JS -->
+                <!-- Explicación / Feedback tras responder -->
+                <div id="feedback-box" class="hidden mt-6 p-4 rounded-xl border text-sm leading-relaxed">
+                    <p id="feedback-title" class="font-bold mb-1"></p>
+                    <p id="feedback-text"></p>
                 </div>
 
-                <!-- Botón Siguiente -->
-                <div class="mt-6 flex justify-end">
-                    <button id="btn-next" onclick="nextQuestion()" disabled class="px-6 py-2.5 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-semibold rounded-xl cursor-not-allowed transition-all">
-                        Siguiente <i class="fa-solid fa-arrow-right ml-2"></i>
+                <!-- Botones de Navegación entre preguntas -->
+                <div class="mt-8 flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
+                    <button id="btn-prev" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-sm hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all">
+                        <i class="fa-solid fa-arrow-left mr-1.5"></i>Anterior
+                    </button>
+                    
+                    <button id="btn-next" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">
+                        Siguiente<i class="fa-solid fa-arrow-right ml-1.5"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Card Final de Resultados -->
-            <div id="results-card" class="hidden bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700 shadow-lg text-center space-y-6">
-                <div class="inline-flex p-4 bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 rounded-full text-4xl">
+            <!-- Pantalla Final de Resultados -->
+            <div id="results-card" class="hidden bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-md border border-slate-200 dark:border-slate-700 text-center space-y-6">
+                <div class="w-20 h-20 mx-auto rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-4xl">
                     <i class="fa-solid fa-trophy"></i>
                 </div>
-                <h2 class="text-2xl font-extrabold text-gray-900 dark:text-white">¡Test Completado!</h2>
-                
-                <div class="max-w-md mx-auto bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-100 dark:border-gray-600">
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">Puntuación Final</p>
-                    <div id="final-score" class="text-4xl font-black text-blue-600 dark:text-blue-400">0 / 0</div>
-                    <p id="final-percentage" class="text-sm font-semibold text-gray-500 dark:text-gray-400 mt-1">0% de aciertos</p>
+                <div>
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">¡Has completado las 50 preguntas!</h3>
+                    <p id="result-message" class="text-slate-600 dark:text-slate-300 mt-2">Aquí tienes tu resumen de estudio:</p>
                 </div>
-
-                <p id="final-feedback-text" class="text-gray-600 dark:text-gray-300 text-sm">
-                    ¡Buen esfuerzo! Revisa los contenidos para afianzar tus conocimientos.
-                </p>
-
-                <div class="pt-4 flex justify-center space-x-4">
-                    <button onclick="restartQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all">
-                        <i class="fa-solid fa-rotate-right mr-2"></i>Intentar de Nuevo
+                <div class="grid grid-cols-3 gap-4 max-w-md mx-auto">
+                    <div class="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+                        <span id="final-correct" class="block text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">0</span>
+                        <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-300">Aciertos</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800">
+                        <span id="final-wrong" class="block text-2xl font-extrabold text-rose-600 dark:text-rose-400">0</span>
+                        <span class="text-xs font-semibold text-rose-700 dark:text-rose-300">Fallos</span>
+                    </div>
+                    <div class="p-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800">
+                        <span id="final-grade" class="block text-2xl font-extrabold text-indigo-600 dark:text-indigo-400">0.0</span>
+                        <span class="text-xs font-semibold text-indigo-700 dark:text-indigo-300">Nota / 10</span>
+                    </div>
+                </div>
+                <div class="pt-4 flex flex-wrap justify-center gap-3">
+                    <button onclick="retryWrongOnly()" id="btn-retry-wrong" class="px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm shadow-md transition-all">
+                        <i class="fa-solid fa-rotate-right mr-1.5"></i>Repasar solo los fallos
                     </button>
-                    <button onclick="switchTab('apuntes')" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold rounded-xl transition-all">
-                        <i class="fa-solid fa-book-open mr-2"></i>Repasar Apuntes
+                    <button onclick="shuffleAndRestart()" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition-all">
+                        <i class="fa-solid fa-shuffle mr-1.5"></i>Volver a hacer las 50 mezcladas
                     </button>
                 </div>
             </div>
@@ -499,656 +398,861 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 text-center text-xs text-gray-500 dark:text-gray-400">
-        <p>Unidad 2: Funcionamiento del ordenador — Preparación para Examen</p>
+    <!-- Pie de página -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+        Guía interactiva de Sistemas Operativos (Temas 4 y 5) • ¡Mucha suerte en el examen!
     </footer>
 
-    <!-- SCRIPT DE DATOS Y LÓGICA -->
+    <!-- Lógica JavaScript -->
     <script>
-        // ================= BANCO DE 52 PREGUNTAS =================
-        const questions = [
-            // --- 1. HISTORIA ---
+        // ==========================================
+        // 1. GESTIÓN DE TEMA (OSCURO / CLARO)
+        // ==========================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('som-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('som-theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('theme-icon');
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // ==========================================
+        // 2. NAVEGACIÓN ENTRE APUNTES Y TEST
+        // ==========================================
+        function switchTab(tab) {
+            const notesSection = document.getElementById('section-notes');
+            const quizSection = document.getElementById('section-quiz');
+            const btnNotes = document.getElementById('btn-tab-notes');
+            const btnQuiz = document.getElementById('btn-tab-quiz');
+
+            const activeClasses = ['bg-white', 'dark:bg-slate-600', 'text-indigo-600', 'dark:text-indigo-300', 'shadow-sm'];
+            const inactiveClasses = ['text-slate-600', 'dark:text-slate-300', 'hover:text-slate-900', 'dark:hover:text-white'];
+
+            if (tab === 'notes') {
+                notesSection.classList.remove('hidden');
+                quizSection.classList.add('hidden');
+                btnNotes.classList.add(...activeClasses);
+                btnNotes.classList.remove(...inactiveClasses);
+                btnQuiz.classList.remove(...activeClasses);
+                btnQuiz.classList.add(...inactiveClasses);
+            } else {
+                notesSection.classList.add('hidden');
+                quizSection.classList.remove('hidden');
+                btnQuiz.classList.add(...activeClasses);
+                btnQuiz.classList.remove(...inactiveClasses);
+                btnNotes.classList.remove(...activeClasses);
+                btnNotes.classList.add(...inactiveClasses);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // 3. BANCO DE 50 PREGUNTAS TIPO TEST
+        // ==========================================
+        const allQuestions = [
+            // --- TEMA 4: UNIDADES DE ALMACENAMIENTO ---
             {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Cuál de las siguientes máquinas se considera precursora de las actuales calculadoras?",
-                options: ["Máquina diferencial de Babbage", "Máquina aritmética de Blaise Pascal (Pascalina)", "El Ábaco chino", "La Mark I"],
+                topic: "Tema 4 • Unidades de almacenamiento",
+                q: "¿Qué es una unidad física de almacenamiento?",
+                options: [
+                    "La representación virtual que hace el sistema operativo de un disco.",
+                    "El dispositivo hardware real utilizado para guardar información y programas.",
+                    "Una carpeta dentro del directorio raíz de Windows.",
+                    "El conjunto de clústeres asignados a un archivo."
+                ],
                 answer: 1,
-                explain: "La máquina aritmética de Blaise Pascal (1642) fue la primera calculadora mecánica capaz de hacer sumas y restas."
+                explanation: "La unidad física es el componente hardware tangible (HDD, CD-ROM, disquetera), mientras que la lógica es la representación que hace el SO."
             },
             {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Quién estableció los principios teóricos del funcionamiento de los ordenadores con programa almacenado?",
-                options: ["Charles Babbage", "Herman Hollerith", "John von Neumann", "Gottfried Leibniz"],
+                topic: "Tema 4 • Unidades de almacenamiento",
+                q: "¿Cómo se define el término 'unidad lógica'?",
+                options: [
+                    "La placa electrónica que controla el motor del disco duro.",
+                    "El cable que conecta el disco duro con la placa base.",
+                    "La representación que el sistema operativo hace de cada unidad física.",
+                    "El primer sector físico grabado de fábrica en un plato."
+                ],
                 answer: 2,
-                explain: "John von Neumann definió la arquitectura básica de programa almacenado en memoria que usan los ordenadores actuales."
+                explanation: "El SO asigna letras o puntos de montaje (unidades lógicas) para representar y trabajar con las unidades físicas."
             },
             {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Cuál fue el primer ordenador comercial de la historia?",
-                options: ["ENIAC", "UNIVAC I", "EDVAC", "IBM 701"],
-                answer: 1,
-                explain: "El UNIVAC I (de Mauchly y Eckert) fue el primer ordenador fabricado para uso comercial utilizando cintas magnéticas."
-            },
-            {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Qué tecnología caracteriza a la 1ª Generación de ordenadores (1946-1955)?",
-                options: ["Transistores", "Válvulas de vacío", "Circuitos integrados", "Microprocesadores"],
-                answer: 1,
-                explain: "La primera generación utilizaba válvulas de vacío electrónicas, por lo que eran de enorme tamaño y consumían mucha energía."
-            },
-            {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿En qué generación de ordenadores se introduce el transistor?",
-                options: ["1ª Generación", "2ª Generación", "3ª Generación", "4ª Generación"],
-                answer: 1,
-                explain: "La 2ª Generación (1955-1964) sustituyó las válvulas de vacío por transistores, reduciendo drásticamente el tamaño y aumentando la velocidad."
-            },
-            {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Qué componente revolucionario dio origen a la 4ª Generación de ordenadores?",
-                options: ["Válvula de vacío", "Circuito Integrado SSI", "Microprocesador", "Transistor de germanio"],
+                topic: "Tema 4 • Unidades de almacenamiento",
+                q: "En sistemas Windows/DOS, ¿a qué dispositivos se reservan tradicionalmente las letras A: y B:?",
+                options: [
+                    "A los dos primeros discos duros internos.",
+                    "A las unidades de CD-ROM y DVD.",
+                    "A la primera y segunda unidad de disquete (FDD).",
+                    "A las memorias USB y tarjetas SD."
+                ],
                 answer: 2,
-                explain: "El microprocesador (como el Intel 4004) integró toda la CPU en un solo chip dando origen a la 4ª Generación y los ordenadores personales."
+                explanation: "Por tradición histórica, A: y B: se reservan para las disqueteras (Floppy Disk Drives)."
             },
             {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Qué máquina utilizaba tarjetas perforadas para procesar el censo de EE.UU. en 1890 y dio origen a la empresa CTR (luego IBM)?",
-                options: ["Máquina Tabuladora de Herman Hollerith", "Pascalina", "ENIAC", "Mark I"],
+                topic: "Tema 4 • Unidades de almacenamiento",
+                q: "¿Qué letra se asigna habitualmente a la primera unidad de disco duro en Windows?",
+                options: ["A:", "B:", "C:", "E:"],
+                answer: 2,
+                explanation: "La letra C: corresponde a la primera unidad de disco duro (donde suele instalarse el SO)."
+            },
+            {
+                topic: "Tema 4 • Unidades de almacenamiento",
+                q: "Si un ordenador solo tiene un disco duro con una única partición y una unidad de CD-ROM, ¿qué letra recibirá el CD-ROM?",
+                options: ["B:", "C:", "D:", "E:"],
+                answer: 2,
+                explanation: "En ausencia de un segundo disco duro o segunda partición, la letra D: se asigna a la primera unidad de CD-ROM."
+            },
+
+            // --- TEMA 4: ESTRUCTURA FÍSICA Y LÓGICA ---
+            {
+                topic: "Tema 4 • Estructura del disco",
+                q: "¿Qué tipo de almacenamiento es un disco duro (HDD)?",
+                options: [
+                    "Óptico y volátil.",
+                    "Electromecánico y no volátil.",
+                    "Electrónico y volátil.",
+                    "Magnético y exclusivamente de solo lectura."
+                ],
+                answer: 1,
+                explanation: "Un disco duro (HDD) es un soporte electromecánico (tiene platos giratorios y cabezales móviles) y no volátil (conserva los datos sin corriente)."
+            },
+            {
+                topic: "Tema 4 • Estructura física",
+                q: "¿Cuándo queda definida la estructura física de un disco duro?",
+                options: [
+                    "Cuando el usuario formatea el disco.",
+                    "Al instalar el sistema operativo.",
+                    "En el proceso de fabricación del disco.",
+                    "Al crear una partición primaria."
+                ],
+                answer: 2,
+                explanation: "La estructura física (platos, caras, pistas, sectores) viene determinada de fábrica; la lógica se crea al formatear."
+            },
+            {
+                topic: "Tema 4 • Estructura física",
+                q: "¿Qué son las 'caras' (heads) de un disco duro?",
+                options: [
+                    "Cada una de las divisiones de una pista.",
+                    "Cada uno de los dos lados de un plato.",
+                    "Los círculos concéntricos grabados en el disco.",
+                    "Las particiones primarias del disco."
+                ],
+                answer: 1,
+                explanation: "Cada plato circular de un disco duro tiene dos superficies o lados utilizables, llamados caras."
+            },
+            {
+                topic: "Tema 4 • Estructura física",
+                q: "¿Cómo se denominan los círculos concéntricos en los que se divide cada cara de un plato?",
+                options: ["Sectores", "Clústeres", "Pistas (tracks)", "Cilindros"],
+                answer: 2,
+                explanation: "Cada cara se divide en anillos o círculos concéntricos llamados pistas (tracks), cuyo número determina la capacidad."
+            },
+            {
+                topic: "Tema 4 • Estructura física",
+                q: "¿Qué es un 'cilindro' en la estructura física de un disco duro?",
+                options: [
+                    "El eje central sobre el que giran los platos.",
+                    "El conjunto de pistas con el mismo número dentro de cada cara de los platos.",
+                    "La agrupación mínima de sectores que lee el sistema operativo.",
+                    "El brazo mecánico que sujeta las cabezas de lectura."
+                ],
+                answer: 1,
+                explanation: "Un cilindro agrupa verticalmente todas las pistas situadas en la misma posición (mismo número) en todos los platos del disco."
+            },
+            {
+                topic: "Tema 4 • Estructura física",
+                q: "¿Qué es un 'sector' en un disco duro?",
+                options: [
+                    "Cada una de las divisiones en las que se fragmenta una pista.",
+                    "El conjunto de todos los platos del disco.",
+                    "La carpeta principal del sistema operativo.",
+                    "Una partición lógica dentro de una extendida."
+                ],
                 answer: 0,
-                explain: "Herman Hollerith diseñó la máquina tabuladora basada en tarjetas perforadas y fundó la empresa CTR, renombrada más tarde como IBM."
+                explanation: "Las pistas circulares se dividen radialmente en pequeños arcos llamados sectores."
             },
             {
-                cat: "1. Historia de los Ordenadores",
-                q: "La calculadora automática MARK I construida por Howard H. Aiken destacaba por:",
-                options: ["Funcionar con microchips", "Medir 17 metros y pesar 70 toneladas", "Ser de bolsillo", "Utilizar inteligencia artificial"],
-                answer: 1,
-                explain: "La MARK I (1944) era una calculadora electromecánica gigantesca de 17 metros de largo y 70 toneladas de peso."
-            },
-
-            // --- 2. ARQUITECTURA VON NEUMANN Y CPU ---
-            {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿En la memoria principal de la arquitectura Von Neumann se almacenan...?",
-                options: ["Solo los datos del usuario", "Solo los programas", "Los programas en ejecución y los datos que manejan", "Los registros de la CPU únicamente"],
+                topic: "Tema 4 • Estructura física",
+                q: "¿Cómo se llama la pieza mecánica que mueve todas las cabezas de lectura/escritura a la vez sobre los platos?",
+                options: ["Eje", "Clúster", "Peine", "Bootmgr"],
                 answer: 2,
-                explain: "La principal característica de Von Neumann es que la memoria guarda simultáneamente tanto las instrucciones del programa como los datos."
+                explanation: "El peine es el conjunto de brazos que sostiene y desplaza simultáneamente las cabezas de lectura/escritura."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué unidad de la CPU interpreta y ejecuta las instrucciones y genera las señales de control?",
-                options: ["UAL (Unidad Aritmético-Lógica)", "UC (Unidad de Control)", "Memoria Caché", "Registro Acumulador"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Cómo y cuándo se crea la estructura lógica de un disco?",
+                options: [
+                    "En la fábrica antes de venderlo.",
+                    "Cuando el usuario da formato (formatea) al disco.",
+                    "Cada vez que se reinicia el ordenador.",
+                    "Al conectar el cable de alimentación."
+                ],
                 answer: 1,
-                explain: "La Unidad de Control (UC) gobierna todo el sistema, lee las instrucciones de memoria y las ejecuta mediante señales de control."
+                explanation: "Al formatear una partición se crea la estructura lógica (sector de arranque, FAT/tabla, directorio raíz y zona de datos)."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué componente de la CPU realiza las operaciones matemáticas y lógicas?",
-                options: ["UC (Unidad de Control)", "UAL / ALU", "CP (Contador de Programa)", "RI (Registro de Instrucción)"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Qué es un 'clúster' o unidad de asignación?",
+                options: [
+                    "Un conjunto contiguo de sectores que forma la unidad mínima de almacenamiento que se lee o escribe.",
+                    "El primer sector físico del disco donde está la BIOS.",
+                    "Un tipo de partición exclusiva de Linux.",
+                    "Un cable de datos de alta velocidad."
+                ],
+                answer: 0,
+                explanation: "El SO no lee sectores sueltos sino agrupaciones contiguas de sectores llamadas clústeres, cuyo tamaño depende del sistema de archivos."
+            },
+            {
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿De qué depende el tamaño de un clúster?",
+                options: [
+                    "De la velocidad de rotación del disco en RPM.",
+                    "Del sistema de archivos utilizado al formatear.",
+                    "De la cantidad de memoria RAM del equipo.",
+                    "Del número de cabezas lectoras del peine."
+                ],
                 answer: 1,
-                explain: "La UAL (Unidad Aritmético-Lógica) ejecuta las operaciones de cálculo (sumas, restas) y comparaciones lógicas booleana."
+                explanation: "Cada sistema de archivos (FAT16, FAT32, NTFS, EXT4) define el tamaño de clúster al formatear."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué registro contiene la dirección de memoria de la PRÓXIMA instrucción a ejecutar?",
-                options: ["RI (Registro de Instrucción)", "RDM (Registro Dirección Memoria)", "CP (Contador de Programa)", "RIM (Registro Intercambio Memoria)"],
-                answer: 2,
-                explain: "El Contador de Programa (CP) o Program Counter apunta siempre a la dirección de memoria donde está la siguiente instrucción."
-            },
-            {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué elemento marca el ritmo de trabajo y sincroniza las operaciones internas de la CPU?",
-                options: ["Secuenciador", "Reloj del sistema", "Descodificador", "Bus de datos"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Dónde está situado el sector de arranque (Boot) de un disco?",
+                options: [
+                    "En el último sector de la última pista.",
+                    "En el primer sector del disco (sector 0).",
+                    "Justo después del área de datos de usuario.",
+                    "En la memoria caché del procesador."
+                ],
                 answer: 1,
-                explain: "El Reloj emite impulsos eléctricos a intervalos constantes (medidos en GHz) marcando el ritmo de proceso."
+                explanation: "El sector de arranque (boot) ocupa siempre el primer sector (sector 0)."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué es la FPU (Floating-Point Unit) alojada dentro de la UAL?",
-                options: ["Unidad para imprimir documentos", "Coprocesador matemático especializado en coma flotante y decimales", "Unidad de almacenamiento en la nube", "El reloj principal"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Qué dos elementos fundamentales contiene el sector de arranque (Boot)?",
+                options: [
+                    "Los archivos del usuario y las librerías DLL.",
+                    "El programa cargador del SO en memoria y la tabla BPB (Bios Parameter Block).",
+                    "La papelera de reciclaje y los archivos temporales.",
+                    "El navegador web y el gestor de ventanas."
+                ],
                 answer: 1,
-                explain: "La FPU gestiona la aritmética con números fraccionarios, decimales y operaciones trigonométricas/logarítmicas."
+                explanation: "Contiene el código para cargar el SO y la tabla BPB con los parámetros físicos del disco."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué registro almacena temporalmente la instrucción que se está ejecutando en ese preciso momento?",
-                options: ["CP (Contador de Programa)", "RI (Registro de Instrucción)", "Flags", "Puntero de Pila"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Qué función cumple la Tabla de Asignación de Archivos (FAT)?",
+                options: [
+                    "Comprimir los archivos para que ocupen menos espacio.",
+                    "Actuar como un índice que indica al SO en qué clústeres está grabado cada archivo.",
+                    "Encriptar las contraseñas de los usuarios.",
+                    "Controlar la temperatura del disco duro."
+                ],
                 answer: 1,
-                explain: "El RI (Registro de Instrucción) guarda el código de la instrucción en curso mientras es analizado por el descodificador."
-            },
-
-            // --- 3. BUSES, MEMORIA Y PERIFÉRICOS ---
-            {
-                cat: "3. Buses y Memoria",
-                q: "Si el bus de direcciones de una CPU tiene 10 bits, ¿cuántas posiciones de memoria puede direccionar directamente?",
-                options: ["64 posiciones", "512 posiciones", "1024 posiciones (2^10)", "4096 posiciones"],
-                answer: 2,
-                explain: "Con n bits en el bus de direcciones se pueden direccionar 2^n posiciones. 2^10 = 1024 celdas."
+                explanation: "La FAT es el índice del disco: tiene tantas filas como clústeres y señala dónde empieza y continúa cada archivo."
             },
             {
-                cat: "3. Buses y Memoria",
-                q: "Si el bus de direcciones posee 6 bits, ¿a cuántas posiciones de memoria se podrá acceder?",
-                options: ["32", "64 (2^6)", "128", "256"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Qué característica tiene el 'Directorio raíz' en la estructura lógica?",
+                options: [
+                    "Es de tamaño variable y se sitúa al final del disco.",
+                    "Es de tamaño fijo, se sitúa tras la FAT y guarda nombres, extensiones, tamaños y fechas.",
+                    "Solo existe en sistemas operativos Linux, nunca en Windows.",
+                    "Almacena únicamente el código binario del cargador de arranque."
+                ],
                 answer: 1,
-                explain: "2 elevado a la potencia de 6 equivale a 64 posiciones de memoria direccionables."
+                explanation: "El directorio raíz (C:\ en Windows o / en Linux) tiene tamaño fijo, va detrás de la FAT y contiene los metadatos de los archivos."
             },
             {
-                cat: "3. Buses y Memoria",
-                q: "¿Cuál es la función del Bus de Datos?",
-                options: ["Indicar la dirección a leer", "Transmitir impulsos de sincronización", "Intercambiar datos e instrucciones entre CPU y el resto de unidades", "Dar corriente eléctrica a los periféricos"],
-                answer: 2,
-                explain: "El bus de datos es el camino bidireccional por donde viaja la información entre la CPU y la memoria/periféricos."
-            },
-            {
-                cat: "3. Buses y Memoria",
-                q: "¿Por qué se dice que la memoria RAM es volátil?",
-                options: ["Porque es muy rápida y barata", "Porque su contenido desaparece al apagar el ordenador", "Porque no se puede escribir en ella", "Porque guarda datos para siempre"],
-                answer: 1,
-                explain: "La RAM requiere suministro eléctrico continuo para mantener la información; al quitar la alimentación, los datos se pierden."
-            },
-            {
-                cat: "3. Buses y Memoria",
-                q: "¿Cuál de estos niveles de memoria de la jerarquía es el MÁS RÁPIDO y de menor capacidad?",
-                options: ["Memoria RAM", "Disco Duro SSD", "Registros de la CPU", "Memoria Caché L3"],
-                answer: 2,
-                explain: "Los registros internos de la CPU están en el nivel 0, ofreciendo el tiempo de acceso más bajo (<1 ns)."
-            },
-            {
-                cat: "3. Buses y Memoria",
-                q: "La memoria intermedia situada entre la CPU y la RAM para acelerar los accesos frecuentes se denomina:",
-                options: ["Memoria ROM", "Memoria Caché", "Memoria Virtual", "Disco Auxiliar"],
-                answer: 1,
-                explain: "La memoria caché guarda copias de datos de la RAM a los que la CPU accede frecuentemente para evitar tiempos de espera."
-            },
-            {
-                cat: "3. Buses y Memoria",
-                q: "¿Qué ocurre con la capacidad y velocidad a medida que descendemos en la pirámide de jerarquía de memoria?",
-                options: ["Aumenta la velocidad y sube el precio", "Aumenta la capacidad, disminuye la velocidad y baja el coste por bit", "Disminuye la capacidad y aumenta la velocidad", "No cambia ningún parámetro"],
-                answer: 1,
-                explain: "Al bajar de nivel: las memorias son más grandes en capacidad, más lentas en respuesta y significativamente más baratas."
-            },
-            {
-                cat: "3. Periféricos y Arranque",
-                q: "¿Cuál de los siguientes dispositivos es un periférico exclusivamente de ENTRADA?",
-                options: ["Impresora", "Monitor", "Escáner de código de barras", "Disco duro externo"],
-                answer: 2,
-                explain: "El escáner de código de barras capta datos del exterior y los envía a la CPU, por lo que es de entrada."
-            },
-            {
-                cat: "3. Periféricos y Arranque",
-                q: "¿Qué tipo de periférico es una tarjeta de red Wi-Fi o Módem?",
-                options: ["De entrada", "De salida", "De almacenamiento", "De comunicación"],
+                topic: "Tema 4 • Estructura lógica",
+                q: "¿Cuál es la zona de mayor tamaño dentro de la estructura lógica de un disco?",
+                options: [
+                    "El sector de arranque.",
+                    "La tabla FAT.",
+                    "El directorio raíz.",
+                    "El área de datos de usuario."
+                ],
                 answer: 3,
-                explain: "Permiten la interacción e intercambio de datos entre ordenadores a través de redes, por lo que son de comunicación."
-            },
-            {
-                cat: "3. Periféricos y Arranque",
-                q: "¿Qué es el POST en el proceso de arranque del ordenador?",
-                options: ["Un programa para navegar por internet", "Una autocomprobación diagnóstica del hardware al encender (Power On Self Test)", "El sistema operativo de Microsoft", "Un tipo de memoria rápida"],
-                answer: 1,
-                explain: "El POST (Power On Self Test) es el diagnóstico grabado en la ROM/BIOS que comprueba el hardware antes de arrancar."
-            },
-            {
-                cat: "3. Periféricos y Arranque",
-                q: "¿Dónde están grabadas las rutinas básicas del sistema de entrada/salida (BIOS)?",
-                options: ["En la memoria RAM", "En el disco duro", "En un chip de memoria de solo lectura (ROM)", "En un pendrive"],
-                answer: 2,
-                explain: "La BIOS está grabada permanentemente en un chip de memoria ROM de la placa base."
+                explanation: "El área de datos ocupa la inmensa mayoría del disco, ya que almacena el contenido real de archivos y subcarpetas."
             },
 
-            // --- 4. EL SOFTWARE ---
+            // --- TEMA 4: PARTICIONES DE DISCO ---
             {
-                cat: "4. El Software del Ordenador",
-                q: "¿Cómo se clasifica el software según el TIPO DE TRABAJO que realiza?",
-                options: ["Shareware, Freeware y Libre", "De Sistema, De Aplicación y De Programación", "Centralizado y Distribuido", "Monotarea y Multitarea"],
+                topic: "Tema 4 • Particiones",
+                q: "¿Por qué es necesario particionar un disco duro?",
+                options: [
+                    "Para que los platos giren más rápido.",
+                    "Para dividir el disco en partes y asignarle tamaño y estructura para que el SO pueda trabajar con él.",
+                    "Para evitar que entren virus por Internet.",
+                    "Para convertir un disco HDD en un SSD."
+                ],
                 answer: 1,
-                explain: "Según la tarea realizada se divide en: Sistema (SO/drivers), Aplicación (programas de usuario) y Programación (IDE/compiladores)."
+                explanation: "El particionado divide el espacio físico e indica al SO qué tamaño y estructura utilizar."
             },
             {
-                cat: "4. El Software del Ordenador",
-                q: "Un programa que se distribuye gratis durante un periodo de prueba y luego requiere pago es:",
-                options: ["Freeware", "Shareware", "Software de Dominio Público", "Software Libre"],
-                answer: 1,
-                explain: "El Shareware (ej. WinRAR) permite evaluar la aplicación de forma gratuita durante un tiempo limitado."
-            },
-            {
-                cat: "4. El Software del Ordenador",
-                q: "¿Qué caracteriza al Freeware?",
-                options: ["Es de pago obligatorio", "Se distribuye gratuitamente pero suele ser de código cerrado con restricciones", "Permite modificar libremente el código fuente", "No se puede redistribuir"],
-                answer: 1,
-                explain: "El Freeware se distribuye sin coste económico, pero el código suele ser cerrado y propiedad del autor."
-            },
-            {
-                cat: "4. El Software del Ordenador",
-                q: "¿Cuál de estas NO es una de las libertades del Software Libre según GNU?",
-                options: ["Usar el programa con cualquier propósito", "Estudiar cómo funciona y adaptarlo", "Modificarlo y obligar a venderlo a precio elevado", "Mejorarlo y publicar las mejoras"],
+                topic: "Tema 4 • Particiones",
+                q: "¿Cuántas particiones PRIMARIAS puede haber como máximo en un mismo disco duro?",
+                options: ["1", "2", "4", "Ilimitadas"],
                 answer: 2,
-                explain: "Las libertades del software libre se centran en el uso, estudio, modificación y compartición del código, no en forzar ventas."
+                explanation: "En el esquema tradicional de particionado solo pueden existir hasta cuatro particiones primarias por disco."
             },
             {
-                cat: "4. El Software del Ordenador",
-                q: "¿Qué tipo de software es un Entorno de Desarrollo Integrado (IDE) como Eclipse o Visual Studio?",
-                options: ["Software de Aplicación", "Software de Sistema", "Software de Programación", "Software Multimedia"],
+                topic: "Tema 4 • Particiones",
+                q: "¿En qué tipo de partición se instala habitualmente el Sistema Operativo?",
+                options: [
+                    "En una partición extendida.",
+                    "En una partición primaria.",
+                    "En el sector 0 sin particionar.",
+                    "En una unidad de red SMB."
+                ],
+                answer: 1,
+                explanation: "Los sistemas operativos se instalan normalmente en particiones primarias."
+            },
+            {
+                topic: "Tema 4 • Particiones",
+                q: "¿Cuál es la función exclusiva de una partición EXTENDIDA?",
+                options: [
+                    "Arrancar directamente Windows 11.",
+                    "Servir de contenedor para alojar particiones lógicas en su interior.",
+                    "Aumentar la memoria RAM virtual del sistema.",
+                    "Hacer copias de seguridad automáticas en la nube."
+                ],
+                answer: 1,
+                explanation: "La partición extendida se creó para superar el límite de 4 particiones, permitiendo crear particiones lógicas dentro de ella."
+            },
+            {
+                topic: "Tema 4 • Particiones",
+                q: "¿Cuántas particiones EXTENDIDAS pueden existir como máximo en un disco?",
+                options: ["Ninguna", "Solo una", "Hasta cuatro", "Tantas como letras del abecedario"],
+                answer: 1,
+                explanation: "Solo puede existir una partición extendida por disco (ocupando el lugar de una de las 4 primarias)."
+            },
+            {
+                topic: "Tema 4 • Particiones",
+                q: "¿Dónde se crea una partición LÓGICA?",
+                options: [
+                    "Fuera de cualquier partición, en el sector de arranque.",
+                    "Dentro de una partición extendida, ocupando una parte o la totalidad de la misma.",
+                    "Dentro de la memoria caché de la CPU.",
+                    "Exclusivamente en discos CD-ROM."
+                ],
+                answer: 1,
+                explanation: "Las particiones lógicas siempre residen dentro del espacio de una partición extendida."
+            },
+            {
+                topic: "Tema 4 • Particiones y Arranque",
+                q: "¿Cuántas particiones ACTIVAS puede tener un disco duro al mismo tiempo?",
+                options: ["Todas las primarias", "Dos", "Solamente una", "Ninguna"],
                 answer: 2,
-                explain: "Los IDE proporcionan herramientas a los programadores para escribir, compilar y depurar código."
+                explanation: "Independientemente de cuántas particiones tenga el disco, solo una puede estar marcada como activa."
             },
             {
-                cat: "4. El Software del Ordenador",
-                q: "¿Qué nombre recibe el software diseñado expresamente para resolver las necesidades concretas de una empresa (ej. gestión de alumnos o cuentas bancarias)?",
-                options: ["Software de Aplicación General", "Software de Uso Específico", "Freeware", "Sistema Operativo"],
+                topic: "Tema 4 • Particiones y Arranque",
+                q: "¿Qué ocurre en la 'partición activa' cuando se enciende el ordenador?",
+                options: [
+                    "Se formatea automáticamente para liberar espacio.",
+                    "Es la partición que se lee en primer lugar para iniciar el Sistema Operativo.",
+                    "Se oculta para proteger los datos del usuario.",
+                    "Se desactiva para ahorrar batería."
+                ],
                 answer: 1,
-                explain: "El software de uso específico o a medida está desarrollado para solventar los requerimientos particulares de una entidad."
+                explanation: "La partición activa indica al firmware/arranque dónde buscar el sistema operativo para iniciarlo."
             },
             {
-                cat: "4. El Software del Ordenador",
-                q: "WinZip o WinRAR se citan habitualmente como ejemplos clásicos de software de tipo:",
-                options: ["Freeware", "Shareware", "Software Libre", "Dominio Público"],
+                topic: "Tema 4 • Particiones y Arranque",
+                q: "¿Qué herramientas se utilizan para elegir entre distintos Sistemas Operativos instalados en diferentes particiones?",
+                options: [
+                    "Desfragmentadores de disco.",
+                    "Gestores de arranque (como bootmgr, boot.ini, GRUB, LILO, BootMagic).",
+                    "Compresores de archivos (ZIP, RAR).",
+                    "Controladores de impresora (DRV)."
+                ],
                 answer: 1,
-                explain: "Se distribuyen en modalidad Shareware (período de evaluación sin costo inicial)."
+                explanation: "Los gestores de arranque permiten seleccionar qué SO o partición activa iniciar al encender el equipo."
             },
 
-            // --- 5. SISTEMAS OPERATIVOS ---
+            // --- TEMA 5: SISTEMAS DE ARCHIVOS ---
             {
-                cat: "5. El Sistema Operativo",
-                q: "¿Qué parte del Sistema Operativo se encarga del control central, la gestión de memoria y el proceso de trabajo?",
-                options: ["Shell", "Kernel (Núcleo)", "Sistema de Archivos", "Driver de impresora"],
+                topic: "Tema 5 • Sistema de archivos",
+                q: "¿Cuál es la responsabilidad principal de un Sistema de Archivos (File System)?",
+                options: [
+                    "Diseñar la interfaz gráfica de ventanas del escritorio.",
+                    "Estructurar la información en la unidad y controlar qué sectores están libres u ocupados.",
+                    "Gestionar la conexión Wi-Fi y Bluetooth.",
+                    "Controlar el ventilador del procesador."
+                ],
                 answer: 1,
-                explain: "El Kernel o núcleo es la parte fundamental del SO que interactúa directamente con el hardware y gestiona recursos."
+                explanation: "El File System organiza los archivos en la unidad y lleva el registro de sectores libres y ocupados."
             },
             {
-                cat: "5. El Sistema Operativo",
-                q: "¿Qué es el Shell o Intérprete de Comandos en un Sistema Operativo?",
-                options: ["La fuente de alimentación", "La interfaz que traduce las peticiones del usuario al Kernel", "Un virus informático", "El reloj interno"],
+                topic: "Tema 5 • Sistema de archivos",
+                q: "¿Son compatibles entre sí todos los sistemas de archivos (por ejemplo, NTFS y EXT2)?",
+                options: [
+                    "Sí, cualquier sistema operativo lee y escribe en todos los formatos de forma nativa.",
+                    "No, normalmente no son compatibles entre sí (desde NTFS no ves EXT2, aunque UNIX/Linux suele poder leer FAT).",
+                    "Sí, porque todos usan exactamente la misma tabla FAT16.",
+                    "Solo son compatibles si el disco es menor de 10 GB."
+                ],
                 answer: 1,
-                explain: "El Shell es la capa o interfaz (gráfica GUI o de texto) con la que interactúa el usuario para enviar órdenes al Kernel."
+                explanation: "Cada SO usa su propio sistema de archivos y no suelen ser compatibles nativamente entre sí (Windows no lee EXT2/3/4 sin software extra)."
             },
             {
-                cat: "5. El Sistema Operativo",
-                q: "¿Qué recurso crea el Sistema Operativo en el disco duro cuando la memoria RAM física es insuficiente?",
-                options: ["Memoria ROM", "Memoria Caché L1", "Memoria Virtual", "Registro de estado"],
-                answer: 2,
-                explain: "La memoria virtual utiliza espacio en el disco duro para emular memoria RAM adicional cuando esta se agota."
-            },
-            {
-                cat: "5. El Sistema Operativo",
-                q: "Un Sistema Operativo que permite ejecutar varios procesos simultáneamente se clasifica como:",
-                options: ["Monotarea", "Multitarea", "Monousuario", "Centralizado"],
+                topic: "Tema 5 • Sistema de archivos",
+                q: "¿En qué momento se determina el sistema de archivos que tendrá una partición?",
+                options: [
+                    "Al comprar el disco en la tienda.",
+                    "Durante el formateo de la unidad o partición.",
+                    "Al crear una carpeta nueva en el escritorio.",
+                    "Al instalar un antivirus."
+                ],
                 answer: 1,
-                explain: "Los sistemas multitarea (como Windows, Linux o macOS) pueden ejecutar y coordinar varios programas al mismo tiempo."
-            },
-            {
-                cat: "5. El Sistema Operativo",
-                q: "Un sistema donde varios ordenadores están conectados de forma transparente y el usuario accede a todos los recursos como un único sistema integrado es:",
-                options: ["Sistema de red", "Sistema distribuido", "Sistema monoproceso", "MS-DOS"],
-                answer: 1,
-                explain: "En los sistemas distribuidos, el usuario utiliza los recursos remotos como si fuesen locales sin conocer su ubicación física exacta."
-            },
-            {
-                cat: "5. El Sistema Operativo",
-                q: "¿Cuál de estos Sistemas Operativos es considerado HISTÓRICAMENTE como Monotarea y Monousuario?",
-                options: ["Windows 11", "MS-DOS", "Linux Ubuntu", "macOS Sonoma"],
-                answer: 1,
-                explain: "MS-DOS únicamente permitía ejecutar una tarea a la vez y para un único usuario."
-            },
-            {
-                cat: "5. El Sistema Operativo",
-                q: "¿Qué función del Sistema Operativo se encarga de evitar conflictos cuando dos aplicaciones quieren imprimir a la vez?",
-                options: ["Gestión y asignación de recursos hardware", "Descodificación de instrucciones", "El reloj interno", "El cálculo en coma flotante"],
-                answer: 0,
-                explain: "El SO administra eficientemente los recursos del hardware evitando colisiones entre los programas en ejecución."
+                explanation: "Al dar formato (formatear) elegimos el File System (NTFS, FAT32, ext4, etc.)."
             },
 
-            // --- REFUERZO ADICIONAL VARIADO ---
+            // --- TEMA 5: ARCHIVOS, NOMBRES, EXTENSIONES Y ATRIBUTOS ---
             {
-                cat: "Conceptos Fundamentales",
-                q: "¿En qué unidad de frecuencia se mide la velocidad del reloj de los procesadores actuales?",
-                options: ["Megabytes (MB)", "Gigahercios (GHz)", "MIPS", "Nanosegundos (ns)"],
+                topic: "Tema 5 • Características de archivos",
+                q: "¿Cuál era la longitud máxima del nombre de un archivo en el antiguo sistema operativo DOS?",
+                options: ["256 caracteres", "8 caracteres", "64 caracteres", "1024 caracteres"],
                 answer: 1,
-                explain: "El Hertzio (Hz) mide los ciclos por segundo. Los procesadores actuales funcionan a frecuencias superiores a varios Gigahercios (GHz)."
+                explanation: "En DOS los nombres estaban limitados a un máximo de 8 caracteres (más 3 de extensión)."
             },
             {
-                cat: "Conceptos Fundamentales",
-                q: "¿Qué significa las siglas MIPS en evaluación de rendimiento informático?",
-                options: ["Memoria Interna Para Sistemas", "Millones de Instrucciones Por Segundo", "Microprocesadores Integrados Para Servidores", "Módulo de Intercambio de Procesos"],
-                answer: 1,
-                explain: "MIPS es la sigla de Millones de Instrucciones Por Segundo, una medida de velocidad de proceso."
-            },
-            {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué registro de la CPU almacena el resultado directo de una operación efectuada por la UAL?",
-                options: ["Contador de Programa (CP)", "Registro Acumulador", "Registro Dirección Memoria (RDM)", "Descodificador"],
-                answer: 1,
-                explain: "El resultado de las operaciones procesadas por la UAL se deposita habitualmente en el registro acumulador."
-            },
-            {
-                cat: "1. Historia de los Ordenadores",
-                q: "¿Qué fue la ENIAC (1945)?",
-                options: ["El primer ordenador personal", "Uno de los primeros ordenadores electrónicos de propósito general con válvulas de vacío", "El primer software libre", "Un sistema operativo de IBM"],
-                answer: 1,
-                explain: "ENIAC (Electronic Numerical Integrator and Computer) fue una de las primeras computadoras 100% electrónicas de la historia."
-            },
-            {
-                cat: "1. Historia de los Ordenadores",
-                q: "El programa de la Quinta Generación de computadoras lanzado por Japón buscaba promover:",
-                options: ["El uso de válvulas gigantes", "Inteligencia artificial, procesamiento en paralelo y lenguaje natural", "Los disquetes flexibles", "Los lenguajes máquina pura"],
-                answer: 1,
-                explain: "La 5ª Generación buscaba desarrollar máquinas capaces de procesar en paralelo y comunicarse en lenguaje cotidiano con Inteligencia Artificial."
-            },
-            {
-                cat: "3. Buses y Memoria",
-                q: "Si disponemos de una memoria de 1 KB, ¿cuántas celdas o bytes de capacidad de almacenamiento tiene?",
-                options: ["1000 bytes", "1024 bytes", "512 bytes", "2048 bytes"],
-                answer: 1,
-                explain: "En informática, 1 Kilobyte equivale exactamente a 2^10 = 1024 bytes."
-            },
-            {
-                cat: "3. Buses y Memoria",
-                q: "Un procesador con bus de direcciones de 32 bits puede direccionar un máximo teórico de memoria RAM de:",
-                options: ["64 MB", "512 MB", "4 GB (2^32 bytes)", "16 TB"],
+                topic: "Tema 5 • Características de archivos",
+                q: "¿Cuántos caracteres permite Windows en los nombres de archivo?",
+                options: ["Hasta 8 caracteres", "Hasta 32 caracteres", "Hasta 256 caracteres", "Hasta 16 caracteres"],
                 answer: 2,
-                explain: "2^32 bytes equivalen exactamente a 4 Gigabytes (4 GB) de memoria direccionable."
+                explanation: "Windows amplió el límite permitiendo nombres largos de hasta 256 caracteres."
             },
             {
-                cat: "3. Buses y Memoria",
-                q: "¿Qué diferencia existe entre un procesador de 32 bits y uno de 64 bits respecto a la memoria?",
-                options: ["El de 64 bits es más lento", "El de 64 bits puede direccionar muchísima más memoria RAM (prácticamente casi ilimitada)", "El de 32 bits no usa memoria Caché", "Ninguna diferencia"],
+                topic: "Tema 5 • Características de archivos",
+                q: "¿Qué sistemas operativos diferencian entre mayúsculas y minúsculas en los nombres de archivo?",
+                options: [
+                    "MS-DOS y Windows 95.",
+                    "UNIX y Linux.",
+                    "Ningún sistema operativo diferencia mayúsculas de minúsculas.",
+                    "Todos los sistemas operativos por igual."
+                ],
                 answer: 1,
-                explain: "Mientras que 32 bits se limita a 4 GB de RAM, una arquitectura de 64 bits puede direccionar hasta 2^64 bytes de RAM."
+                explanation: "En UNIX/Linux 'Archivo.txt' y 'archivo.txt' son ficheros distintos; en Windows/DOS se tratan como el mismo."
             },
             {
-                cat: "3. Periféricos y Arranque",
-                q: "¿Cuál de estos dispositivos de almacenamiento es de tipo ÓPTICO?",
-                options: ["Disco duro SSD", "Disco Blu-Ray / DVD", "Memoria Flash USB", "Tarjeta microSD"],
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "¿Para qué sirven las extensiones de los archivos (como .TXT, .DOC, .EXE)?",
+                options: [
+                    "Para aumentar el tamaño del archivo en disco.",
+                    "Para identificar rápidamente el tipo de archivo y asociarlo a una aplicación.",
+                    "Para proteger el archivo con contraseña.",
+                    "Para ocultar el archivo del directorio raíz."
+                ],
                 answer: 1,
-                explain: "Los CD, DVD y Blu-Ray son soportes ópticos que utilizan tecnología láser para la lectura y escritura de datos."
+                explanation: "La extensión indica el formato del contenido y qué programa debe abrirlo o ejecutarlo."
             },
             {
-                cat: "3. Periféricos y Arranque",
-                q: "¿En qué unidades se mide la potencia de cálculo científico mediante operaciones en coma flotante?",
-                options: ["MIPS", "MFLOPS (Millions of Floating-point Operations Per Second)", "GHz", "Bytes"],
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "¿Qué tipo de archivo identifican las extensiones .EXE y .COM?",
+                options: [
+                    "Archivos de imagen comprimida.",
+                    "Archivos binarios ejecutables.",
+                    "Documentos de texto sin formato.",
+                    "Archivos de audio digital."
+                ],
                 answer: 1,
-                explain: "Los MFLOPS representan los millones de operaciones de punto flotante por segundo realizadas."
+                explanation: "Tanto .EXE como .COM corresponden a programas binarios ejecutables."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "El registro encargado de conectar la celda de memoria direccionada para la transferencia de datos de entrada/salida es el:",
-                options: ["RIM (Registro Intercambio Memoria)", "CP (Contador de Programa)", "RI (Registro de Instrucción)", "Flags"],
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "¿Qué es un archivo con extensión .DLL?",
+                options: [
+                    "Un salvapantallas de Windows.",
+                    "Una biblioteca de carga dinámica (librería).",
+                    "Un archivo de proceso por lotes para DOS.",
+                    "Una hoja de cálculo de Excel."
+                ],
+                answer: 1,
+                explanation: "DLL significa Dynamic Link Library (biblioteca de carga dinámica) usada por los programas."
+            },
+            {
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "¿A qué corresponde la extensión .BAT?",
+                options: [
+                    "Archivo de proceso por lotes para DOS.",
+                    "Controlador de batería del portátil.",
+                    "Imagen de mapa de bits.",
+                    "Archivo temporal del navegador."
+                ],
                 answer: 0,
-                explain: "El RIM (Registro de Intercambio de Memoria) contiene el dato que se va a escribir o que se acaba de leer de la RAM."
+                explanation: "Los ficheros .BAT (batch) contienen secuencias de comandos por lotes para DOS/Windows."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿En qué dos fases se divide la ejecución de cualquier instrucción en la CPU?",
-                options: ["Fase de apagado y encendido", "Fase de Búsqueda y Fase de Ejecución", "Fase de formateo y lectura", "Fase de entrada y salida"],
-                answer: 1,
-                explain: "Cualquier instrucción pasa primero por la Fase de Búsqueda (traerla de la RAM a la UC) y la Fase de Ejecución (realizar la acción)."
-            },
-            {
-                cat: "5. El Sistema Operativo",
-                q: "El Proyecto GNU se inició en 1984 con el objetivo principal de:",
-                options: ["Fabricar chips de silicio", "Crear un sistema operativo completo de software libre tipo UNIX", "Vender ordenadores IBM", "Crear la memoria RAM"],
-                answer: 1,
-                explain: "El proyecto GNU fue creado para ofrecer un sistema operativo completamente libre compatible con UNIX."
-            },
-            {
-                cat: "Conceptos Fundamentales",
-                q: "¿Qué es un byte?",
-                options: ["Un conjunto de 4 bits", "Un conjunto de 8 bits", "Un millón de bits", "Un ciclo de reloj"],
-                answer: 1,
-                explain: "Un byte es la unidad de información compuesta por una agrupación de 8 bits."
-            },
-            {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué componente de la UC traduce y analiza el código de operación extraído de la memoria?",
-                options: ["Descodificador de Instrucción (DI)", "FPU", "Registro Acumulador", "Unidad de Control"],
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "Relaciona correctamente estas extensiones según los apuntes: .DRV, .LNK y .SCR",
+                options: [
+                    "Driver de hardware, Acceso directo y Salvapantallas.",
+                    "Documento Word, Enlace web y Script de Linux.",
+                    "Disco virtual, Linux Kernel y Seguridad.",
+                    "Archivo comprimido, Imagen y Sonido."
+                ],
                 answer: 0,
-                explain: "El descodificador analiza el código de la instrucción retenida en el RI para generar las órdenes de control."
+                explanation: ".DRV = Driver de hardware; .LNK = Acceso directo (Link); .SCR = Ejecutable especial de salvapantallas."
             },
             {
-                cat: "5. El Sistema Operativo",
-                q: "Los sistemas que permiten a múltiples usuarios trabajar y compartir recursos en red a la vez se denominan:",
-                options: ["Monousuario", "Multiusuario", "Uniprocesador", "Monotarea"],
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "¿Qué son los archivos con extensión .CAB, .ZIP o .RAR?",
+                options: [
+                    "Archivos de configuración del sistema.",
+                    "Archivos comprimidos.",
+                    "Archivos de código objeto de compilación en C.",
+                    "Archivos de ayuda HTML."
+                ],
                 answer: 1,
-                explain: "Los sistemas multiusuario están capacitados para dar servicio a varios usuarios simultáneamente."
+                explanation: "CAB (Cabinet), ZIP, RAR y ARJ son formatos de archivos comprimidos."
             },
             {
-                cat: "1. Historia de los Ordenadores",
-                q: "Lenguajes como COBOL, FORTRAN y ALGOL aparecieron principalmente en la:",
-                options: ["1ª Generación", "2ª Generación", "4ª Generación", "5ª Generación"],
+                topic: "Tema 5 • Extensiones de archivos",
+                q: "¿Qué es un archivo con extensión .OBJ según el temario?",
+                options: [
+                    "Un objeto 3D de videojuegos.",
+                    "Un archivo de código objeto (intermedio en un proceso de compilación como en C).",
+                    "Un archivo de música sin compresión.",
+                    "Una presentación de PowerPoint."
+                ],
                 answer: 1,
-                explain: "Fueron los primeros lenguajes de alto nivel desarrollados en la 2ª Generación durante el uso de transistores."
+                explanation: "En lenguajes compilados como C, .OBJ es el archivo intermedio de código objeto generado antes del enlazado final."
             },
             {
-                cat: "3. Periféricos y Arranque",
-                q: "¿Qué función tiene una pantalla táctil?",
-                options: ["Es solo de entrada", "Es solo de salida", "Es un periférico mixto (Entrada/Salida)", "Es solo memoria de almacenamiento"],
-                answer: 2,
-                explain: "Actúa como salida al mostrar las imágenes y como entrada al captar las pulsaciones táctiles."
-            },
-            {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿Qué registro de la CPU almacena el indicador de estados o condiciones (por ejemplo si el resultado es cero o negativo)?",
-                options: ["Registro de Banderas o Flags", "CP", "RDM", "RIM"],
-                answer: 0,
-                explain: "El registro de Flags o de Estado almacena condiciones resultantes de la última operación de la UAL."
-            },
-            {
-                cat: "4. El Software del Ordenador",
-                q: "Las aplicaciones para diseño asistido por ordenador (CAD) se clasifican como:",
-                options: ["Software de Sistema", "Software de Aplicación", "Software de Programación", "Sistemas Operativos"],
+                topic: "Tema 5 • Atributos de archivos",
+                q: "¿Qué efecto tiene el atributo 'Sólo lectura' en un archivo?",
+                options: [
+                    "El archivo desaparece de la vista del explorador.",
+                    "El archivo se puede abrir y leer, pero no modificar.",
+                    "El archivo se borra tras cerrarlo.",
+                    "El archivo se ejecuta automáticamente al encender el PC."
+                ],
                 answer: 1,
-                explain: "Pertenecen al software de aplicación profesional para asistir al usuario en tareas técnicas."
+                explanation: "El atributo de sólo lectura protege el contenido frente a modificaciones accidentales."
             },
             {
-                cat: "3. Buses y Memoria",
-                q: "¿Cuál es la capacidad estándar actual de almacenamiento de un disco Blu-Ray de doble capa?",
-                options: ["700 MB", "4.7 GB", "50 GB", "1 TB"],
-                answer: 2,
-                explain: "Un disco Blu-Ray almacena 25 GB en una sola capa y hasta 50 GB en doble capa."
+                topic: "Tema 5 • Atributos de archivos",
+                q: "¿Qué indica el atributo 'Archivo' (Archive) en las propiedades de un fichero?",
+                options: [
+                    "Que el fichero es una carpeta comprimida.",
+                    "Que el fichero ha sido modificado (útil para copias de seguridad).",
+                    "Que pertenece exclusivamente al núcleo del sistema.",
+                    "Que no tiene extensión."
+                ],
+                answer: 1,
+                explanation: "El atributo 'Archivo' marca si un fichero ha sido creado o modificado desde el último respaldo."
             },
             {
-                cat: "2. Arquitectura Von Neumann",
-                q: "¿A través de qué bus el procesador envía la señal para indicar si la operación es de LECTURA o ESCRITURA?",
-                options: ["Bus de Datos", "Bus de Direcciones", "Bus de Control", "Bus USB"],
+                topic: "Tema 5 • Atributos de archivos",
+                q: "¿Qué atributos indican que un fichero no debe mostrarse normalmente y que pertenece al Sistema Operativo?",
+                options: [
+                    "Comprimido y Encriptado.",
+                    "Oculto y Sistema.",
+                    "Sólo lectura y Temporal.",
+                    "Ejecutable y Binario."
+                ],
+                answer: 1,
+                explanation: "'Oculto' evita que se muestre visiblemente y 'Sistema' identifica que es un fichero crítico del SO."
+            },
+
+            // --- TEMA 5: CLASIFICACIÓN DE SISTEMAS DE ARCHIVOS ---
+            {
+                topic: "Tema 5 • Clasificación de File Systems",
+                q: "¿Qué ventaja principal ofrece NTFS frente a FAT en sistemas Windows?",
+                options: [
+                    "Es más antiguo y compatible con disquetes de 1980.",
+                    "Es más rápido y seguro que FAT.",
+                    "No necesita formatearse nunca.",
+                    "Ocupa exactamente 0 bytes en el disco."
+                ],
+                answer: 1,
+                explanation: "NTFS mejora el rendimiento (velocidad), el tamaño máximo de archivos/particiones y la seguridad frente a FAT16/FAT32."
+            },
+            {
+                topic: "Tema 5 • Clasificación de File Systems",
+                q: "¿Cuáles de los siguientes son sistemas de archivos DE DISCO propios de Linux?",
+                options: [
+                    "FAT16, FAT32 y NTFS.",
+                    "ext2, ext3 y ext4.",
+                    "SMB y NSS.",
+                    "CDFS y UDF."
+                ],
+                answer: 1,
+                explanation: "La familia ext (ext2, ext3, ext4) es el estándar de sistemas de archivos de disco en Linux."
+            },
+            {
+                topic: "Tema 5 • Clasificación de File Systems",
+                q: "¿A qué categoría pertenecen SMB (Samba) y NSS (Novell NetWare)?",
+                options: [
+                    "Sistemas de archivos de propósito general.",
+                    "Sistemas de archivos de red.",
+                    "Sistemas de archivos ópticos.",
+                    "Particiones primarias de arranque."
+                ],
+                answer: 1,
+                explanation: "SMB y NSS permiten compartir y acceder a archivos a través de una red local."
+            },
+            {
+                topic: "Tema 5 • Clasificación de File Systems",
+                q: "¿Qué sistema de archivos de propósito general utilizan los discos CD-ROM?",
+                options: ["SWAP", "NTFS", "CDFS", "EXT4"],
                 answer: 2,
-                explain: "El Bus de Control transmite órdenes como lectura/escritura en memoria o peticiones de interrupción."
+                explanation: "CDFS (CD-ROM File System) es el sistema estándar utilizado en medios ópticos CD-ROM."
+            },
+            {
+                topic: "Tema 5 • Clasificación de File Systems",
+                q: "¿Qué es SWAP dentro de la clasificación de sistemas de archivos?",
+                options: [
+                    "Un sistema de archivos de red de Microsoft.",
+                    "Un sistema de archivos de propósito general usado en Linux como espacio de intercambio (memoria virtual).",
+                    "Un formato exclusivo para tarjetas de cámaras digitales.",
+                    "Un gestor de arranque antiguo de MS-DOS."
+                ],
+                answer: 1,
+                explanation: "SWAP es un sistema de archivos de propósito general empleado por Linux para gestionar el intercambio de memoria."
             }
         ];
 
-        // ================= ESTADO Y LÓGICA DE LA APLICACIÓN =================
-        let currentQuestionIndex = 0;
-        let scoreCorrect = 0;
-        let scoreIncorrect = 0;
-        let answeredCurrent = false;
+        // ==========================================
+        // 4. ESTADO Y LÓGICA DEL JUEGO INTERACTIVO
+        // ==========================================
+        let currentQuestions = [...allQuestions];
+        let currentIndex = 0;
+        let userAnswers = new Array(currentQuestions.length).fill(null);
+        let streak = 0;
 
-        // Inicialización
-        window.onload = function() {
-            renderQuestion();
-        };
-
-        // Cambiar entre Pestañas (Apuntes / Juego)
-        function switchTab(tab) {
-            const secApuntes = document.getElementById('sec-apuntes');
-            const secJuego = document.getElementById('sec-juego');
-            const btnApuntes = document.getElementById('btn-tab-apuntes');
-            const btnJuego = document.getElementById('btn-tab-juego');
-
-            if (tab === 'apuntes') {
-                secApuntes.classList.remove('hidden');
-                secJuego.classList.add('hidden');
-
-                btnApuntes.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm";
-                btnJuego.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
-            } else {
-                secApuntes.classList.add('hidden');
-                secJuego.classList.remove('hidden');
-
-                btnJuego.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 shadow-sm";
-                btnApuntes.className = "px-3 sm:px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white";
-            }
-        }
-
-        // Conmutar Modo Oscuro
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            const iconSun = document.getElementById('theme-icon-sun');
-            const iconMoon = document.getElementById('theme-icon-moon');
-
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                iconSun.classList.add('hidden');
-                iconMoon.classList.remove('hidden');
-            } else {
-                html.classList.add('dark');
-                iconMoon.classList.add('hidden');
-                iconSun.classList.remove('hidden');
-            }
-        }
-
-        // Mostrar Pregunta Activa
         function renderQuestion() {
-            answeredCurrent = false;
-            const qData = questions[currentQuestionIndex];
+            const qObj = currentQuestions[currentIndex];
+            const total = currentQuestions.length;
 
-            // UI Progress
-            document.getElementById('quiz-progress-text').innerText = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
-            const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
-            document.getElementById('quiz-progress-bar').style.width = `${progressPercent}%`;
+            // Actualizar textos superiores
+            document.getElementById('question-counter').textContent = `Pregunta ${currentIndex + 1} de ${total}`;
+            document.getElementById('question-topic').textContent = qObj.topic;
+            document.getElementById('question-text').textContent = qObj.q;
 
-            // UI Question
-            document.getElementById('question-category').innerText = qData.cat;
-            document.getElementById('question-text').innerText = qData.q;
+            // Actualizar barra de progreso
+            const progressPercent = ((currentIndex + 1) / total) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
 
-            // Render Opciones
+            // Renderizar opciones
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
 
             const letters = ['A', 'B', 'C', 'D'];
-            qData.options.forEach((optText, index) => {
+            const alreadyAnswered = userAnswers[currentIndex] !== null;
+
+            qObj.options.forEach((optText, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "w-full text-left p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 flex items-center space-x-3 transition-all duration-150 focus:outline-none";
-                btn.onclick = () => selectOption(index);
-                btn.id = `opt-${index}`;
+                btn.className = "w-full text-left p-4 rounded-xl border-2 transition-all flex items-start space-x-3 font-medium text-sm sm:text-base ";
+
+                if (!alreadyAnswered) {
+                    btn.className += "border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-slate-700/60 text-slate-800 dark:text-slate-200 cursor-pointer";
+                    btn.onclick = () => selectOption(idx);
+                } else {
+                    btn.disabled = true;
+                    const chosen = userAnswers[currentIndex];
+                    if (idx === qObj.answer) {
+                        // Respuesta correcta
+                        btn.className += "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-900 dark:text-emerald-200";
+                    } else if (idx === chosen && chosen !== qObj.answer) {
+                        // Respuesta elegida incorrecta
+                        btn.className += "border-rose-500 bg-rose-50 dark:bg-rose-900/30 text-rose-900 dark:text-rose-200";
+                    } else {
+                        // Resto de opciones
+                        btn.className += "border-slate-200 dark:border-slate-700 opacity-50 text-slate-500 dark:text-slate-400";
+                    }
+                }
+
+                // Badge de letra
+                let badgeClass = "w-7 h-7 rounded-lg flex-shrink-0 flex items-center justify-center font-bold text-xs ";
+                if (!alreadyAnswered) {
+                    badgeClass += "bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300";
+                } else if (idx === qObj.answer) {
+                    badgeClass += "bg-emerald-500 text-white";
+                } else if (idx === userAnswers[currentIndex]) {
+                    badgeClass += "bg-rose-500 text-white";
+                } else {
+                    badgeClass += "bg-slate-100 dark:bg-slate-700 text-slate-500";
+                }
 
                 btn.innerHTML = `
-                    <span class="w-7 h-7 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold text-xs shrink-0">
-                        ${letters[index]}
-                    </span>
-                    <span class="text-sm text-gray-800 dark:text-gray-200">${optText}</span>
+                    <span class="${badgeClass}">${letters[idx]}</span>
+                    <span class="pt-0.5">${optText}</span>
                 `;
                 optionsContainer.appendChild(btn);
             });
 
-            // Feedback & Next Button Reset
+            // Mostrar/Ocultar Feedback
             const feedbackBox = document.getElementById('feedback-box');
-            feedbackBox.className = "mt-6 p-4 rounded-xl hidden text-sm";
-            feedbackBox.innerHTML = '';
-
-            const btnNext = document.getElementById('btn-next');
-            btnNext.disabled = true;
-            btnNext.className = "px-6 py-2.5 bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-semibold rounded-xl cursor-not-allowed transition-all";
-        }
-
-        // Selección de Opción
-        function selectOption(indexSelected) {
-            if (answeredCurrent) return;
-            answeredCurrent = true;
-
-            const qData = questions[currentQuestionIndex];
-            const isCorrect = (indexSelected === qData.answer);
-
-            // Actualizar Puntuación
-            if (isCorrect) {
-                scoreCorrect++;
-                document.getElementById('score-correct').innerText = scoreCorrect;
+            if (alreadyAnswered) {
+                const isCorrect = userAnswers[currentIndex] === qObj.answer;
+                feedbackBox.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'dark:bg-emerald-900/20', 'dark:border-emerald-800', 'dark:text-emerald-200', 'bg-rose-50', 'border-rose-200', 'text-rose-800', 'dark:bg-rose-900/20', 'dark:border-rose-800', 'dark:text-rose-200');
+                
+                if (isCorrect) {
+                    feedbackBox.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-800', 'dark:bg-emerald-900/20', 'dark:border-emerald-800', 'dark:text-emerald-200');
+                    document.getElementById('feedback-title').innerHTML = '<i class="fa-solid fa-circle-check mr-1.5"></i>¡Correcto!';
+                } else {
+                    feedbackBox.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-800', 'dark:bg-rose-900/20', 'dark:border-rose-800', 'dark:text-rose-200');
+                    document.getElementById('feedback-title').innerHTML = '<i class="fa-solid fa-circle-xmark mr-1.5"></i>Incorrecto';
+                }
+                document.getElementById('feedback-text').textContent = qObj.explanation;
             } else {
-                scoreIncorrect++;
-                document.getElementById('score-incorrect').innerText = scoreIncorrect;
+                feedbackBox.classList.add('hidden');
             }
 
-            // Estilar Opciones
-            qData.options.forEach((_, idx) => {
-                const btn = document.getElementById(`opt-${idx}`);
-                btn.disabled = true;
-                btn.classList.remove('hover:bg-gray-50', 'dark:hover:bg-gray-700/50');
+            // Estado de botones anterior / siguiente
+            document.getElementById('btn-prev').disabled = currentIndex === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentIndex === total - 1) {
+                btnNext.innerHTML = 'Ver Resultados<i class="fa-solid fa-flag-checkered ml-1.5"></i>';
+            } else {
+                btnNext.innerHTML = 'Siguiente<i class="fa-solid fa-arrow-right ml-1.5"></i>';
+            }
+        }
 
-                if (idx === qData.answer) {
-                    // Opción Correcta (verde)
-                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 flex items-center justify-between";
-                } else if (idx === indexSelected && !isCorrect) {
-                    // Opción Errónea seleccionada (rojo)
-                    btn.className = "w-full text-left p-4 rounded-xl border-2 border-red-500 bg-red-50 dark:bg-red-950/40 text-red-900 dark:text-red-200 flex items-center justify-between";
-                } else {
-                    // Opciones neutras no elegidas
-                    btn.className += " opacity-50";
+        function selectOption(optionIdx) {
+            if (userAnswers[currentIndex] !== null) return;
+
+            userAnswers[currentIndex] = optionIdx;
+            const isCorrect = optionIdx === currentQuestions[currentIndex].answer;
+
+            if (isCorrect) {
+                streak++;
+            } else {
+                streak = 0;
+            }
+
+            updateScoreboard();
+            renderQuestion();
+        }
+
+        function updateScoreboard() {
+            let correctCount = 0;
+            let wrongCount = 0;
+
+            userAnswers.forEach((ans, idx) => {
+                if (ans !== null) {
+                    if (ans === currentQuestions[idx].answer) correctCount++;
+                    else wrongCount++;
                 }
             });
 
-            // Mostrar Feedback
-            const feedbackBox = document.getElementById('feedback-box');
-            feedbackBox.classList.remove('hidden');
-
-            if (isCorrect) {
-                feedbackBox.className = "mt-6 p-4 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200 text-sm";
-                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-circle-check mr-1.5"></i>¡Correcto!</strong> ${qData.explain}`;
-            } else {
-                feedbackBox.className = "mt-6 p-4 rounded-xl bg-red-100 dark:bg-red-950/60 border border-red-300 dark:border-red-800 text-red-900 dark:text-red-200 text-sm";
-                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-circle-xmark mr-1.5"></i>Incorrecto.</strong> ${qData.explain}`;
-            }
-
-            // Habilitar Botón Siguiente
-            const btnNext = document.getElementById('btn-next');
-            btnNext.disabled = false;
-            btnNext.className = "px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl cursor-pointer shadow-md transition-all";
+            document.getElementById('score-correct').textContent = correctCount;
+            document.getElementById('score-wrong').textContent = wrongCount;
+            document.getElementById('score-streak').textContent = streak;
         }
 
-        // Avanzar a la siguiente pregunta
         function nextQuestion() {
-            if (currentQuestionIndex < questions.length - 1) {
-                currentQuestionIndex++;
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
                 renderQuestion();
             } else {
-                showFinalResults();
+                showResults();
             }
         }
 
-        // Pantalla de Resultados
-        function showFinalResults() {
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function showResults() {
             document.getElementById('quiz-card').classList.add('hidden');
             const resultsCard = document.getElementById('results-card');
             resultsCard.classList.remove('hidden');
 
-            const total = questions.length;
-            const percentage = Math.round((scoreCorrect / total) * 100);
+            let correctCount = 0;
+            let wrongCount = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans === currentQuestions[idx].answer) correctCount++;
+                else wrongCount++;
+            });
 
-            document.getElementById('final-score').innerText = `${scoreCorrect} / ${total}`;
-            document.getElementById('final-percentage').innerText = `${percentage}% de aciertos`;
+            const total = currentQuestions.length;
+            const grade = ((correctCount / total) * 10).toFixed(1);
 
-            const feedbackText = document.getElementById('final-feedback-text');
-            if (percentage >= 90) {
-                feedbackText.innerText = "¡Excelente! Dominas perfectamente la Unidad 2. ¡Estás más que preparado para el examen!";
-            } else if (percentage >= 70) {
-                feedbackText.innerText = "¡Muy buen resultado! Tienes claros casi todos los conceptos clave.";
-            } else if (percentage >= 50) {
-                feedbackText.innerText = "Aprobado. Te recomendamos darle una última lectura a los apuntes para asegurar la nota.";
+            document.getElementById('final-correct').textContent = correctCount;
+            document.getElementById('final-wrong').textContent = wrongCount;
+            document.getElementById('final-grade').textContent = grade;
+
+            const btnRetryWrong = document.getElementById('btn-retry-wrong');
+            if (wrongCount === 0) {
+                btnRetryWrong.classList.add('hidden');
+                document.getElementById('result-message').textContent = "¡Brutal! Has acertado absolutamente todo. Estás más que preparado para mañana.";
             } else {
-                feedbackText.innerText = "Necesitas repasar un poco más. Revisa el apartado de apuntes y vuelve a intentar el test.";
+                btnRetryWrong.classList.remove('hidden');
+                document.getElementById('result-message').textContent = grade >= 5 
+                    ? "¡Buen trabajo! Ya tienes el aprobado, pero repasa los fallos para ir a por el 10." 
+                    : "Sigue practicando, repasa los fallos y verás cómo lo clavas en el examen.";
             }
         }
 
-        // Reiniciar Cuestionario
-        function restartQuiz() {
-            currentQuestionIndex = 0;
-            scoreCorrect = 0;
-            scoreIncorrect = 0;
-            document.getElementById('score-correct').innerText = '0';
-            document.getElementById('score-incorrect').innerText = '0';
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function shuffleAndRestart() {
+            currentQuestions = shuffleArray(allQuestions);
+            currentIndex = 0;
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            streak = 0;
+            
+            document.getElementById('results-card').classList.add('hidden');
+            document.getElementById('quiz-card').classList.remove('hidden');
+            
+            updateScoreboard();
+            renderQuestion();
+        }
+
+        function retryWrongOnly() {
+            const wrongQuestions = currentQuestions.filter((q, idx) => userAnswers[idx] !== q.answer);
+            if (wrongQuestions.length === 0) return;
+
+            currentQuestions = shuffleArray(wrongQuestions);
+            currentIndex = 0;
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            streak = 0;
 
             document.getElementById('results-card').classList.add('hidden');
             document.getElementById('quiz-card').classList.remove('hidden');
 
+            updateScoreboard();
             renderQuestion();
         }
+
+        // Inicializar al cargar la página
+        window.onload = function() {
+            initTheme();
+            renderQuestion();
+        };
     </script>
 </body>
 </html>
